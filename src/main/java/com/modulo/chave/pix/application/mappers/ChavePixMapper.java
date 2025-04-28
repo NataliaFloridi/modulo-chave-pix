@@ -11,9 +11,11 @@ import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ChavePixMapper {
     
     public CriarChavePixResponse domainToResponse(ChavePix chavePix) {
@@ -24,31 +26,42 @@ public class ChavePixMapper {
     }
 
     public ChavePixEntity domainToEntity(ChavePix chavePix) {
-        return ChavePixEntity.builder()
+        try {
+            return ChavePixEntity.builder()
             .id(chavePix.getId())
             .tipoChave(chavePix.getTipoChave())
             .valorChave(chavePix.getValorChave())
             .tipoConta(chavePix.getTipoConta())
-            .numeroAgencia(chavePix.getNumeroAgencia())
-            .numeroConta(chavePix.getNumeroConta())
+            .numeroAgencia(Integer.parseInt(chavePix.getNumeroAgencia()))
+            .numeroConta(Integer.parseInt(chavePix.getNumeroConta()))
             .nomeCorrentista(chavePix.getNomeCorrentista())
             .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
             .dataCriacao(chavePix.getDataCriacao())
             .build();
+        } catch (IllegalArgumentException e) {
+           log.error("Erro ao converter chave pix para entidade: {}", e.getMessage());
+           throw e;
+        }
+        
     }
 
     public ChavePix requestToDomain(CriarChavePixRequest request) {
-        return ChavePix.builder()
-            .id(UUID.randomUUID())
-            .tipoChave(request.getTipoChave())
-            .valorChave(request.getValorChave())
-            .tipoConta(request.getTipoConta())
-            .numeroAgencia(Integer.parseInt(request.getNumeroAgencia()))
-            .numeroConta(Integer.parseInt(request.getNumeroConta()))
-            .nomeCorrentista(request.getNomeCorrentista())
-            .sobrenomeCorrentista(request.getSobrenomeCorrentista())
-            .dataCriacao(LocalDateTime.now())
-            .build();
+        try {
+            return ChavePix.builder()
+                .id(UUID.randomUUID())
+                .tipoChave(request.getTipoChave())
+                .valorChave(request.getValorChave())
+                .tipoConta(request.getTipoConta())
+                .numeroAgencia(request.getNumeroAgencia())
+                .numeroConta(request.getNumeroConta())
+                .nomeCorrentista(request.getNomeCorrentista())
+                .sobrenomeCorrentista(request.getSobrenomeCorrentista())
+                .dataCriacao(LocalDateTime.now())
+                .build();
+        } catch (NumberFormatException e) {
+            log.error("Erro ao converter request para domínio: {}", e.getMessage());
+            throw e;
+        }
     }
 
     public ChavePix entityToDomain(ChavePixEntity savedChavePix) {
@@ -57,8 +70,8 @@ public class ChavePixMapper {
             .tipoChave(savedChavePix.getTipoChave())
             .valorChave(savedChavePix.getValorChave())
             .tipoConta(savedChavePix.getTipoConta())
-            .numeroAgencia(savedChavePix.getNumeroAgencia())
-            .numeroConta(savedChavePix.getNumeroConta())
+            .numeroAgencia(savedChavePix.getNumeroAgencia().toString())
+            .numeroConta(savedChavePix.getNumeroConta().toString())
             .nomeCorrentista(savedChavePix.getNomeCorrentista())
             .sobrenomeCorrentista(savedChavePix.getSobrenomeCorrentista())
             .dataCriacao(savedChavePix.getDataCriacao())

@@ -30,11 +30,11 @@ public class CriarChavePixRequest {
     private TipoContaEnum tipoConta;
 
     @NotBlank(message = "Agência é obrigatória")
-    @Pattern(regexp = "\\d{4}", message = "Agência deve ter 4 dígitos")
+    @Pattern(regexp = "^\\d{1,4}$", message = "Agência deve ter até 4 dígitos numéricos")
     private String numeroAgencia;
 
     @NotBlank(message = "Conta é obrigatória")
-    @Pattern(regexp = "\\d{8}", message = "Conta deve ter 8 dígitos")
+    @Pattern(regexp = "^\\d{1,8}$", message = "Conta deve ter até 8 dígitos numéricos")
     private String numeroConta;
 
     @NotBlank(message = "Nome do correntista é obrigatório")

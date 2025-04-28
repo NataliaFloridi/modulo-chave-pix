@@ -7,5 +7,5 @@ public interface ChavePixPort {
     ChavePix save(ChavePix chavePix);
     boolean existsByValorChave(String valorChave);
     ChavePix findByValorChave(String valorChave);
-    int countByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta);
+    int countByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta);
 }

@@ -13,24 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChaveAleatoriaValidator implements ChavePixValidatorStrategy {
 
-
   @Override
   public boolean validate(String chaveAleatoria) throws ValidationException {
-      log.info("Validando formato da chave aleatória");
-      validarFormato(chaveAleatoria);
+
       log.info("Validando comprimento da chave aleatória");
       validarComprimento(chaveAleatoria);
 
       log.info("Chave aleatória válida");
       return true;
-  }
-
-  private void validarFormato(String chaveAleatoria) throws ValidationException {
-
-      if (chaveAleatoria == null || chaveAleatoria.isBlank()) {
-          log.error("Chave aleatória não pode ser vazia");
-          throw new ValidationException("Chave aleatória não pode ser vazia");
-      }
   }
 
   private void validarComprimento(String chaveAleatoria) throws ValidationException {

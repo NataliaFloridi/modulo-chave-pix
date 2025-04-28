@@ -23,8 +23,8 @@ public class ChavePix {
     private TipoChaveEnum tipoChave;
     private String valorChave;
     private TipoContaEnum tipoConta;
-    private Integer numeroAgencia;
-    private Integer numeroConta;
+    private String numeroAgencia;
+    private String numeroConta;
     private String nomeCorrentista;
     private String sobrenomeCorrentista;
     private LocalDateTime dataCriacao;

@@ -2,6 +2,7 @@ package com.modulo.chave.pix.infrastructure.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +14,6 @@ import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -24,8 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @RestController
 @Slf4j
-//@RequestMapping("/chave-pix")
-@RequestMapping("/api/modulo-chave-pix/chave-pix")
+@RequestMapping("/chave-pix")
 public class ChavePixController {
 
     private final InclusaoChavePixUseCase inclusaoChavePixUseCase;
@@ -37,7 +36,7 @@ public class ChavePixController {
             @ApiResponse(responseCode = "422", description = "Erro de validação"),
             @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
-    @PostMapping
+    @PostMapping("/criar")
     public ResponseEntity<CriarChavePixResponse> create(@Valid @RequestBody CriarChavePixRequest request)
             throws BusinessValidationException, ValidationException {
 

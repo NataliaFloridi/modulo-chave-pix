@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TipoContaEnum {
-    CONTA_CORRENTE("corrente"),
-    CONTA_POUPANCA("poupança");
+    CORRENTE("corrente"),
+    POUPANCA("poupanca");
 
     private String descricao;
 }

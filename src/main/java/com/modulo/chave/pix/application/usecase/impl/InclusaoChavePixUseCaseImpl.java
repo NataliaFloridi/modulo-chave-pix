@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.modulo.chave.pix.application.usecase.InclusaoChavePixUseCase;
 import com.modulo.chave.pix.application.validation.factory.ChavePixValidationFactory;
 import com.modulo.chave.pix.application.validation.strategy.ChavePixRegraValidatorStrategy;
-import com.modulo.chave.pix.application.validation.strategy.ContasValidatorStrategy;
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
@@ -26,18 +25,15 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
     private final ChavePixPort chavePixPort;
     private final ChavePixValidationFactory validationFactory;
     private final List<ChavePixRegraValidatorStrategy> regraValidators;
-    private final List<ContasValidatorStrategy> contasValidators;
 
     public ChavePix execute(ChavePix chavePix)
             throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de criação de chave PIX");
-            if (validationFactory.getTipoChave(chavePix.getTipoChave()).validate(chavePix.getValorChave())) {
+            if (!validationFactory.getTipoChave(chavePix.getTipoChave()).validate(chavePix.getValorChave())) {
+                log.error("Falha na validação da chave: {}", chavePix.getValorChave());
                 throw new ValidationException("Validação da chave falhou");
             }
-
-            log.info("Validando dados da conta");
-            validarDadosConta(chavePix.getNumeroAgencia(), chavePix.getNumeroConta());
 
             log.info("Criando entidade");
             ChavePix novaChavePix = criarChavePix(chavePix);
@@ -48,11 +44,17 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
             log.info("Persistindo chave PIX");
             ChavePix chaveSalva = chavePixPort.save(novaChavePix);
 
-            log.info("Chave PIX criada com sucesso");
+            log.info("Chave PIX criada com sucesso: {}", chaveSalva);
             return chaveSalva;
+        } catch (ValidationException e) {
+            log.error("Erro de validação ao criar chave pix: {}", e.getMessage(), e);
+            throw e;
+        } catch (BusinessValidationException e) {
+            log.error("Erro de negócio ao criar chave pix: {}", e.getMessage(), e);
+            throw e;
         } catch (Exception e) {
-            log.error("Erro ao criar chave pix", e);
-            throw new BusinessValidationException("Erro ao criar chave pix");
+            log.error("Erro inesperado ao criar chave pix: {}", e.getMessage(), e);
+            throw new BusinessValidationException("Erro inesperado ao criar chave pix: " + e.getMessage());
         }
     }
 
@@ -60,14 +62,6 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
         log.info("Validando regras de negócio");
         for (ChavePixRegraValidatorStrategy validator : regraValidators) {
             validator.validate(chavePix);
-        }
-    }
-
-    private void validarDadosConta(Integer numeroAgencia, Integer numeroConta) throws BusinessValidationException {
-        log.info("Validando dados da conta");
-        for (ContasValidatorStrategy validator : contasValidators) {
-            validator.validate(numeroAgencia);
-            validator.validate(numeroConta);
         }
     }
 

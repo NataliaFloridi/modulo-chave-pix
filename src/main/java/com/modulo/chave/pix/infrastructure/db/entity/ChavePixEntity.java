@@ -15,12 +15,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "chaves_pix")
 public class ChavePixEntity {
@@ -54,9 +56,4 @@ public class ChavePixEntity {
 
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
-
-    public ChavePixEntity() {
-        this.id = UUID.randomUUID();
-        this.dataCriacao = LocalDateTime.now();
-    }
 }

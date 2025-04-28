@@ -46,11 +46,13 @@ public class ChavePixAdapter implements ChavePixPort {
     }
 
     @Override
-    public int countByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta) {
+    public int countByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta) {
         log.info("Contando chaves pix por número de agência e conta");
-        int count = jpaChavePixRepository.countByNumeroAgenciaAndNumeroConta(numeroAgencia, numeroConta);
+        int count = jpaChavePixRepository.countByNumeroAgenciaAndNumeroConta(
+            Integer.parseInt(numeroAgencia),
+            Integer.parseInt(numeroConta)
+        );
         log.info("Total de chaves pix: {}", count);
         return count;
     }
-    
 }
