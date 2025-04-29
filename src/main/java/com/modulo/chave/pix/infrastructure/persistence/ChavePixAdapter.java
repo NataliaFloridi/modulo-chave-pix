@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 
 import com.modulo.chave.pix.application.mappers.ChavePixMapper;
 import com.modulo.chave.pix.domain.model.ChavePix;
+import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 import com.modulo.chave.pix.domain.port.ChavePixPort;
 import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 import com.modulo.chave.pix.infrastructure.db.jparepository.JpaChavePixRepository;
@@ -22,11 +24,11 @@ public class ChavePixAdapter implements ChavePixPort {
     @Override
     public ChavePix save(ChavePix chavePix) {
         log.info("Salvando chave pix");
-        ChavePixEntity chavePixEntity = chavePixMapper.domainToEntity(chavePix);
+        ChavePixEntity chavePixEntity = chavePixMapper.toCriarEntity(chavePix);
         ChavePixEntity savedChavePix = jpaChavePixRepository.save(chavePixEntity);
   
         log.info("Chave pix salva com sucesso");
-        return chavePixMapper.entityToDomain(savedChavePix);
+        return chavePixMapper.toCriarDomain(savedChavePix);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class ChavePixAdapter implements ChavePixPort {
         log.info("Buscando chave pix por valor");
         ChavePixEntity chavePixEntity = jpaChavePixRepository.findByValorChave(valorChave);
         log.info("Chave pix encontrada: {}", chavePixEntity);
-        return chavePixMapper.entityToDomain(chavePixEntity);
+        return chavePixMapper.toCriarDomain(chavePixEntity);
     }
 
     @Override
@@ -54,5 +56,16 @@ public class ChavePixAdapter implements ChavePixPort {
         );
         log.info("Total de chaves pix: {}", count);
         return count;
+    }
+
+    @Override
+    public TipoPessoaEnum findByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta) {
+        log.info("Buscando chave pix por tipo de pessoa e tipo de chave");
+        TipoPessoaEnum tipoPessoa = jpaChavePixRepository.findTipoPessoaByNumeroAgenciaAndNumeroConta(
+            Integer.parseInt(numeroAgencia),
+            Integer.parseInt(numeroConta)
+        );
+        log.info("Chave pix encontrada: {}", tipoPessoa);
+        return tipoPessoa;
     }
 }

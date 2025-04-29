@@ -26,8 +26,8 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
     private final ChavePixValidationFactory validationFactory;
     private final List<ChavePixRegraValidatorStrategy> regraValidators;
 
-    public ChavePix execute(ChavePix chavePix)
-            throws ValidationException, BusinessValidationException {
+    @Override
+    public ChavePix execute(ChavePix chavePix) throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de criação de chave PIX");
             if (!validationFactory.getTipoChave(chavePix.getTipoChave()).validate(chavePix.getValorChave())) {
@@ -76,7 +76,7 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
                 .numeroConta(chavePix.getNumeroConta())
                 .nomeCorrentista(chavePix.getNomeCorrentista())
                 .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
-                .dataCriacao(LocalDateTime.now())
+                .dataInclusao(LocalDateTime.now())
                 .build();
     }
 }

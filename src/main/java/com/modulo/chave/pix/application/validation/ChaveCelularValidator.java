@@ -74,8 +74,8 @@ public class ChaveCelularValidator implements ChavePixValidatorStrategy {
 
         log.info("Validando formato da chave celular");
         if (!matcher.matches()) {
-            log.error("Formato inválido. Padrão esperado: +[Cód.País][DDD][Número]");
-            throw new ValidationException("Formato inválido. Padrão esperado: +[Cód.País][DDD][Número]");
+            log.error("Formato inválido. Padrão esperado: +55(11)99999-9999");
+            throw new ValidationException("Formato inválido. Padrão esperado: +55(11)99999-9999");
         }
         
         String codigoPais = matcher.group(1);

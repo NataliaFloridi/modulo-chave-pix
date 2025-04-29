@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.modulo.chave.pix.application.validation.strategy.ChavePixRegraValidatorStrategy;
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
-import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 import com.modulo.chave.pix.domain.port.ChavePixPort;
 
 import lombok.RequiredArgsConstructor;
@@ -24,30 +24,30 @@ public class LimiteChaveValidator implements ChavePixRegraValidatorStrategy {
     @Override
     public void validate(ChavePix chavePix) throws BusinessValidationException {
         log.info("Validando limite de chaves");
-        int contaAtual = chavePixPort.countByNumeroAgenciaAndNumeroConta(
-            chavePix.getNumeroAgencia(),
-            chavePix.getNumeroConta()
-        );
 
-        if (pessoaFisica(chavePix.getTipoChave()) && contaAtual >= LIMITE_CHAVE_PF) {
-            log.error("Limite de 5 chaves para Pessoa Física excedido");
-            throw new BusinessValidationException("Limite de 5 chaves para Pessoa Física excedido");
+        TipoPessoaEnum tipoPessoa = buscarTipoPessoa(chavePix.getNumeroAgencia(), chavePix.getNumeroConta());
+
+        int quantidadeChaves = chavePixPort.countByNumeroAgenciaAndNumeroConta(
+                chavePix.getNumeroAgencia(),
+                chavePix.getNumeroConta());
+
+        if (validarLimiteChave(tipoPessoa, quantidadeChaves)) {
+            log.error("Limite de chaves excedido");
+            throw new BusinessValidationException("Limite de chaves excedido");
         }
-
-        if (pessoaJuridica(chavePix.getTipoChave()) && contaAtual >= LIMITE_CHAVE_PJ) {
-            log.error("Limite de 20 chaves para Pessoa Jurídica excedido");
-            throw new BusinessValidationException("Limite de 20 chaves para Pessoa Jurídica excedido");
-        }
-
     }
 
-    private boolean pessoaFisica(TipoChaveEnum tipoChave) {
-        return tipoChave == TipoChaveEnum.CPF || 
-               tipoChave == TipoChaveEnum.EMAIL || 
-               tipoChave == TipoChaveEnum.CELULAR;
+    private TipoPessoaEnum buscarTipoPessoa(String numeroAgencia, String numeroConta) {
+        return chavePixPort.findByNumeroAgenciaAndNumeroConta(numeroAgencia, numeroConta);
     }
 
-    private boolean pessoaJuridica(TipoChaveEnum tipoChave) {
-        return tipoChave == TipoChaveEnum.CNPJ;
+    private boolean validarLimiteChave(TipoPessoaEnum tipoPessoa, int quantidadeChaves) {
+        if (tipoPessoa.equals(TipoPessoaEnum.FISICA) && quantidadeChaves >= LIMITE_CHAVE_PF) {
+            return true;
+        }
+        if (tipoPessoa.equals(TipoPessoaEnum.JURIDICA) && quantidadeChaves >= LIMITE_CHAVE_PJ) {
+            return true;
+        }
+        return false;
     }
 }

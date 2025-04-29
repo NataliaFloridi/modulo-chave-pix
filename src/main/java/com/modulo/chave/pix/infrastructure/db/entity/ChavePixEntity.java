@@ -54,6 +54,6 @@ public class ChavePixEntity {
     @Column(name = "sobrenome_correntista", length = 45)
     private String sobrenomeCorrentista;
 
-    @Column(name = "data_criacao", nullable = false, updatable = false)
-    private LocalDateTime dataCriacao;
+    @Column(name = "data_inclusao", nullable = false, updatable = false)
+    private LocalDateTime dataInclusao;
 }
