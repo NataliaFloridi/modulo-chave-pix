@@ -56,4 +56,7 @@ public class ChavePixEntity {
 
     @Column(name = "data_inclusao", nullable = false, updatable = false)
     private LocalDateTime dataInclusao;
+
+    @Column(name = "data_inativacao")
+    private LocalDateTime dataInativacao;
 }

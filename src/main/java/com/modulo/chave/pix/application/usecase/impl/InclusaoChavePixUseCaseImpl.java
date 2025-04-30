@@ -12,7 +12,7 @@ import com.modulo.chave.pix.application.validation.strategy.ChavePixRegraValidat
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
-import com.modulo.chave.pix.domain.port.ChavePixPort;
+import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
 
-    private final ChavePixPort chavePixPort;
+    private final InclusaoChavePixPort chavePixPort;
     private final ChavePixValidationFactory validationFactory;
     private final List<ChavePixRegraValidatorStrategy> regraValidators;
 
@@ -30,19 +30,20 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
     public ChavePix execute(ChavePix chavePix) throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de criação de chave PIX");
-            if (!validationFactory.getTipoChave(chavePix.getTipoChave()).validate(chavePix.getValorChave())) {
+            var validator = validationFactory.getTipoChave(chavePix.getTipoChave());
+            if (!validator.validate(chavePix.getValorChave())) {
                 log.error("Falha na validação da chave: {}", chavePix.getValorChave());
                 throw new ValidationException("Validação da chave falhou");
             }
 
             log.info("Criando entidade");
-            ChavePix novaChavePix = criarChavePix(chavePix);
+            var novaChavePix = criarChavePix(chavePix);
 
             log.info("Validando regras de negócio");
             validarRegrasNegocio(novaChavePix);
 
             log.info("Persistindo chave PIX");
-            ChavePix chaveSalva = chavePixPort.save(novaChavePix);
+            var chaveSalva = chavePixPort.save(novaChavePix);
 
             log.info("Chave PIX criada com sucesso: {}", chaveSalva);
             return chaveSalva;

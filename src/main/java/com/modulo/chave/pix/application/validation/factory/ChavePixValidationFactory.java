@@ -2,12 +2,12 @@ package com.modulo.chave.pix.application.validation.factory;
 
 import org.springframework.stereotype.Component;
 
-import com.modulo.chave.pix.application.validation.ChaveAleatoriaValidator;
-import com.modulo.chave.pix.application.validation.ChaveCelularValidator;
-import com.modulo.chave.pix.application.validation.ChaveCnpjValidator;
-import com.modulo.chave.pix.application.validation.ChaveCpfValidator;
-import com.modulo.chave.pix.application.validation.ChaveEmailValidator;
-import com.modulo.chave.pix.application.validation.strategy.ChavePixValidatorStrategy;
+import com.modulo.chave.pix.application.validation.strategy.ChavePixTipoValidatorStrategy;
+import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveAleatoriaValidatorStrategyImpl;
+import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveCelularValidatorStrategyImpl;
+import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveCnpjValidatorStrategyImpl;
+import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveCpfValidatorStrategyImpl;
+import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveEmailValidatorStrategyImpl;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 
 import lombok.RequiredArgsConstructor;
@@ -21,13 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ChavePixValidationFactory {
 
-    private final ChaveCelularValidator chaveCelularValidator;
-    private final ChaveEmailValidator chaveEmailValidator;
-    private final ChaveCpfValidator chaveCpfValidator;
-    private final ChaveCnpjValidator chaveCnpjValidator;
-    private final ChaveAleatoriaValidator chaveAleatoriaValidator;
+    private final ChaveCelularValidatorStrategyImpl chaveCelularValidator;
+    private final ChaveEmailValidatorStrategyImpl chaveEmailValidator;
+    private final ChaveCpfValidatorStrategyImpl chaveCpfValidator;
+    private final ChaveCnpjValidatorStrategyImpl chaveCnpjValidator;
+    private final ChaveAleatoriaValidatorStrategyImpl chaveAleatoriaValidator;
 
-    public ChavePixValidatorStrategy getTipoChave(TipoChaveEnum tipoChave) {
+    public ChavePixTipoValidatorStrategy getTipoChave(TipoChaveEnum tipoChave) {
         log.info("Obtendo estratégia de validação para o tipo de chave: {}", tipoChave);
         switch (tipoChave) {
             case CELULAR:

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
+import com.modulo.chave.pix.domain.exception.RegistroNotFoundException;
 import com.modulo.chave.pix.domain.exception.DuplicateKeyException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 
@@ -83,6 +84,13 @@ public class GlobalHandlerException {
     public ResponseEntity<ErrorResponse> handleDuplicateKeyException(DuplicateKeyException ex) {
         logger.warn("Tentativa de criar chave duplicada: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(RegistroNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRegistroNotFoundException(RegistroNotFoundException ex) {
+        logger.warn("Registro não encontrado: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponse(ex.getMessage()));
     }
 

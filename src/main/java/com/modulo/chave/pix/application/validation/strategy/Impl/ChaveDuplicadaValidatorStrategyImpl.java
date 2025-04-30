@@ -1,4 +1,4 @@
-package com.modulo.chave.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import org.springframework.stereotype.Component;
 
@@ -6,7 +6,7 @@ import com.modulo.chave.pix.application.validation.strategy.ChavePixRegraValidat
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.DuplicateKeyException;
 import com.modulo.chave.pix.domain.model.ChavePix;
-import com.modulo.chave.pix.domain.port.ChavePixPort;
+import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ChaveDuplicadaValidator implements ChavePixRegraValidatorStrategy {
+public class ChaveDuplicadaValidatorStrategyImpl implements ChavePixRegraValidatorStrategy {
 
-    private final ChavePixPort chavePixPort;
+    private final InclusaoChavePixPort chavePixPort;
 
     @Override
     public void validate(ChavePix chavePix) throws BusinessValidationException {

@@ -1,10 +1,10 @@
-package com.modulo.chave.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import com.modulo.chave.pix.application.validation.strategy.ChavePixValidatorStrategy;
+import com.modulo.chave.pix.application.validation.strategy.ChavePixTipoValidatorStrategy;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 
 import br.com.caelum.stella.validation.CNPJValidator;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor
 @Slf4j
-public class ChaveCnpjValidator implements ChavePixValidatorStrategy {
+public class ChaveCnpjValidatorStrategyImpl implements ChavePixTipoValidatorStrategy {
 
      private static final Pattern CNPJ_PATTERN = Pattern.compile("^\\d{14}$");
  

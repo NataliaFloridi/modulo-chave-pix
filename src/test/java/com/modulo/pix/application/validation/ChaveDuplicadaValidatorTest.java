@@ -5,17 +5,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.modulo.chave.pix.application.validation.ChaveDuplicadaValidator;
-import com.modulo.chave.pix.domain.port.ChavePixPort;
+import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveDuplicadaValidatorStrategyImpl;
+import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;
 
 @ExtendWith(MockitoExtension.class)
 public class ChaveDuplicadaValidatorTest {
 
     @Mock
-    private ChavePixPort chavePixPort;
+    private InclusaoChavePixPort chavePixPort;
 
     @InjectMocks
-    private ChaveDuplicadaValidator chaveDuplicadaValidator;
+    private ChaveDuplicadaValidatorStrategyImpl chaveDuplicadaValidator;
     
     
 }

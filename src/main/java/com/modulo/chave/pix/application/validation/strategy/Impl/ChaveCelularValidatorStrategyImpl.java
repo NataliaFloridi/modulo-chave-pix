@@ -1,11 +1,11 @@
-package com.modulo.chave.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import com.modulo.chave.pix.application.validation.strategy.ChavePixValidatorStrategy;
+import com.modulo.chave.pix.application.validation.strategy.ChavePixTipoValidatorStrategy;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor
 @Slf4j
-public class ChaveCelularValidator implements ChavePixValidatorStrategy {
+public class ChaveCelularValidatorStrategyImpl implements ChavePixTipoValidatorStrategy {
 
     private static final Pattern CELULAR_PATTERN = Pattern.compile("^\\+(\\d{1,2})\\((\\d{1,3})\\)(\\d{4,5}-\\d{4})$");
 

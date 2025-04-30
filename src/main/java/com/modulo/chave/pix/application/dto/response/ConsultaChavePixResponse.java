@@ -15,8 +15,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class AlterarChavePixResponse {
-    
+public class ConsultaChavePixResponse {
+
     private UUID id;
     private TipoChaveEnum tipoChave;
     private String valorChave;
@@ -26,4 +26,5 @@ public class AlterarChavePixResponse {
     private String nomeCorrentista;
     private String sobrenomeCorrentista;
     private LocalDateTime dataInclusao;
+    private LocalDateTime dataInativacao;    
 }

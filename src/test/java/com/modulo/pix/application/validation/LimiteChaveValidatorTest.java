@@ -5,16 +5,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
-import com.modulo.chave.pix.application.validation.LimiteChaveValidator;
-import com.modulo.chave.pix.domain.port.ChavePixPort;
+import com.modulo.chave.pix.application.validation.strategy.Impl.LimiteChaveValidatorStrategyImpl;
+import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;
 
 @ExtendWith(MockitoExtension.class)
 public class LimiteChaveValidatorTest{
 
     @Mock
-    private ChavePixPort chavePixPort;
+    private InclusaoChavePixPort chavePixPort;
 
     @InjectMocks
-    private LimiteChaveValidator limiteChaveValidator;
+    private LimiteChaveValidatorStrategyImpl limiteChaveValidator;
 }

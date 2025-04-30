@@ -1,33 +1,32 @@
-package com.modulo.chave.pix.domain.model;
+package com.modulo.chave.pix.application.dto.request;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
-import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+/**
+ * DTO para requisição de consulta de chaves PIX.
+ * 
+ * Padrão: Builder
+ * Motivo: Para facilitar a criação de objetos com muitos parâmetros opcionais.
+ */
+@Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class ChavePix {
+@AllArgsConstructor
+public class ConsultaChavePixRequest {
     
     private UUID id;
     private TipoChaveEnum tipoChave;
-    private String valorChave;
-    private TipoContaEnum tipoConta;
     private String numeroAgencia;
     private String numeroConta;
     private String nomeCorrentista;
-    private String sobrenomeCorrentista;
     private LocalDateTime dataInclusao;
     private LocalDateTime dataInativacao;
-}
-
+} 

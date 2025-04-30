@@ -1,14 +1,19 @@
 package com.modulo.chave.pix.application.mappers;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.modulo.chave.pix.application.dto.request.AlterarChavePixRequest;
-import com.modulo.chave.pix.application.dto.request.CriarChavePixRequest;
-import com.modulo.chave.pix.application.dto.response.AlterarChavePixResponse;
-import com.modulo.chave.pix.application.dto.response.CriarChavePixResponse;
+import com.modulo.chave.pix.application.dto.request.AlteracaoChavePixRequest;
+import com.modulo.chave.pix.application.dto.request.AlteracaoContaPixRequest;
+import com.modulo.chave.pix.application.dto.request.ConsultaChavePixRequest;
+import com.modulo.chave.pix.application.dto.request.InclusaoChavePixRequest;
+import com.modulo.chave.pix.application.dto.response.AlteracaoChavePixResponse;
+import com.modulo.chave.pix.application.dto.response.ConsultaChavePixResponse;
+import com.modulo.chave.pix.application.dto.response.InclusaoChavePixResponse;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 
@@ -21,14 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ChavePixMapper {
     
-    public CriarChavePixResponse toCriarResponse(ChavePix chavePix) {
-        return CriarChavePixResponse.builder()
+    public InclusaoChavePixResponse toCriarResponse(ChavePix chavePix) {
+        return InclusaoChavePixResponse.builder()
             .id(chavePix.getId())
             .build();
     }
 
-    public AlterarChavePixResponse toAlterarResponse(ChavePix chavePix) {
-        return AlterarChavePixResponse.builder()
+    public AlteracaoChavePixResponse toAlterarResponse(ChavePix chavePix) {
+        return AlteracaoChavePixResponse.builder()
             .id(chavePix.getId())
             .tipoChave(chavePix.getTipoChave())
             .valorChave(chavePix.getValorChave())
@@ -53,6 +58,7 @@ public class ChavePixMapper {
             .nomeCorrentista(chavePix.getNomeCorrentista())
             .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
             .dataInclusao(chavePix.getDataInclusao())
+            .dataInativacao(chavePix.getDataInativacao())
             .build();
         } catch (NumberFormatException e) {
            log.error("Erro ao converter número de agência ou conta para inteiro: {}", e.getMessage());
@@ -60,7 +66,7 @@ public class ChavePixMapper {
         }
     }
 
-    public ChavePix toCriarDomain(CriarChavePixRequest request) {
+    public ChavePix toCriarDomain(InclusaoChavePixRequest request) {
         try {
             return ChavePix.builder()
                 .id(UUID.randomUUID())
@@ -90,10 +96,11 @@ public class ChavePixMapper {
             .nomeCorrentista(savedChavePix.getNomeCorrentista())
             .sobrenomeCorrentista(savedChavePix.getSobrenomeCorrentista())
             .dataInclusao(savedChavePix.getDataInclusao())
+            .dataInativacao(savedChavePix.getDataInativacao())
             .build();
     }
 
-    public ChavePix toAlterarDomain(AlterarChavePixRequest request) {
+    public ChavePix toAlterarDomain(AlteracaoContaPixRequest request) {
         return ChavePix.builder()
             .id(request.getId())
             .tipoConta(request.getTipoConta())
@@ -104,4 +111,56 @@ public class ChavePixMapper {
             .build();
     }
 
+    public ChavePix toAlterarDomain(AlteracaoChavePixRequest request) {
+        return ChavePix.builder()
+            .id(request.getId())
+            .tipoConta(request.getTipoConta())
+            .numeroAgencia(request.getNumeroAgencia())
+            .numeroConta(request.getNumeroConta())
+            .nomeCorrentista(request.getNomeCorrentista())
+            .sobrenomeCorrentista(request.getSobrenomeCorrentista())
+            .tipoChave(request.getTipoChave())
+            .valorChave(request.getValorChave())
+            .build();
+    }
+
+    public ChavePix toAlterarDomain(ConsultaChavePixRequest chavePixRequest) {
+        return ChavePix.builder()
+            .id(chavePixRequest.getId())
+            .tipoChave(chavePixRequest.getTipoChave()) 
+            .numeroAgencia(chavePixRequest.getNumeroAgencia())
+            .numeroConta(chavePixRequest.getNumeroConta())
+            .nomeCorrentista(chavePixRequest.getNomeCorrentista())
+            .dataInclusao(chavePixRequest.getDataInclusao())
+            .dataInativacao(chavePixRequest.getDataInativacao())
+            .build();
+    }
+
+    public ConsultaChavePixResponse toConsultaResponse(ChavePix chavePix) {
+        return ConsultaChavePixResponse.builder()
+            .id(chavePix.getId())
+            .tipoChave(chavePix.getTipoChave())
+            .valorChave(chavePix.getValorChave())
+            .tipoConta(chavePix.getTipoConta())
+            .numeroAgencia(chavePix.getNumeroAgencia())
+            .numeroConta(chavePix.getNumeroConta())
+            .nomeCorrentista(chavePix.getNomeCorrentista())
+            .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
+            .dataInclusao(chavePix.getDataInclusao())
+            .dataInativacao(chavePix.getDataInativacao())
+            .build();
+    }
+
+    public List<ConsultaChavePixResponse> toConsultaResponse(List<ChavePix> chavePixList) {
+        return chavePixList.stream()
+            .map(this::toConsultaResponse)  
+            //.map(chavePix -> toConsultaResponse(chavePix))
+            .collect(Collectors.toList());
+    }
+
+    public List<ConsultaChavePixResponse> toAlterarResponse(List<ChavePix> chavePixList) {
+        return chavePixList.stream()
+            .map(this::toConsultaResponse)
+            .collect(Collectors.toList());
+    }
 }

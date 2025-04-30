@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class CriarChavePixResponse {
+public class InclusaoChavePixResponse {
     
     private UUID id;
 }

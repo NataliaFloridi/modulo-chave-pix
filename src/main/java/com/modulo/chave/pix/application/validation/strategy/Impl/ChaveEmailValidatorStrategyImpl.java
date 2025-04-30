@@ -1,10 +1,10 @@
-package com.modulo.chave.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import com.modulo.chave.pix.application.validation.strategy.ChavePixValidatorStrategy;
+import com.modulo.chave.pix.application.validation.strategy.ChavePixTipoValidatorStrategy;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor
 @Slf4j
-public class ChaveEmailValidator implements ChavePixValidatorStrategy {
+public class ChaveEmailValidatorStrategyImpl implements ChavePixTipoValidatorStrategy {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
 

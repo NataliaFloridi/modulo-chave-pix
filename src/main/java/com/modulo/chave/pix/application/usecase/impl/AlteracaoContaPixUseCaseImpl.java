@@ -1,14 +1,14 @@
 package com.modulo.chave.pix.application.usecase.impl;
 
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.modulo.chave.pix.application.usecase.AlteracaoContaPixUseCase;
-import com.modulo.chave.pix.application.validation.strategy.ChavePixRegraValidatorStrategy;
+import com.modulo.chave.pix.application.validation.strategy.Impl.AlteracaoContaPixValidatorStrategyImpl;
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
+import com.modulo.chave.pix.domain.exception.RegistroNotFoundException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
-import com.modulo.chave.pix.domain.port.ChavePixPort;
+import com.modulo.chave.pix.domain.port.AlteracaoChavePixPort;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,29 +18,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
 
-    private final ChavePixPort chavePixPort;
-    private final List<ChavePixRegraValidatorStrategy> regraValidators;
+    private final AlteracaoChavePixPort alteracaoChavePixPort;
+    private final AlteracaoContaPixValidatorStrategyImpl alteracaoContaPixValidator;
 
     @Override
     public ChavePix execute(ChavePix chavePix) throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de alteração de conta PIX");
-
-            ChavePix chaveExistente = chavePixPort.findByValorChave(chavePix.getValorChave());
+            ChavePix chaveExistente = alteracaoChavePixPort.findById(chavePix.getId());
             if (chaveExistente == null) {
-                throw new BusinessValidationException("Chave PIX não encontrada");
+                throw new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + chavePix.getId());
             }
 
-            chavePix.setTipoChave(chaveExistente.getTipoChave());
-            chavePix.setValorChave(chaveExistente.getValorChave());
-            chavePix.setDataInclusao(chaveExistente.getDataInclusao());
-            chavePix.setStatusConta(chaveExistente.isStatusConta());
-
             log.info("Validando regras de negócio");
-            validarRegrasNegocio(chavePix);
+            alteracaoContaPixValidator.validate(chavePix, chaveExistente);
+
+            log.info("Atualizando dados da chave PIX");
+            atualizarDadosChavePix(chavePix, chaveExistente);
 
             log.info("Persistindo chave PIX");
-            ChavePix chaveSalva = chavePixPort.save(chavePix);
+            ChavePix chaveSalva = alteracaoChavePixPort.save(chavePix);
 
             log.info("Conta PIX alterada com sucesso: {}", chaveSalva);
             return chaveSalva;
@@ -50,16 +47,21 @@ public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
         } catch (BusinessValidationException e) {
             log.error("Erro de negócio ao alterar conta pix: {}", e.getMessage(), e);
             throw e;
+        } catch (RegistroNotFoundException e) {
+            log.error("Chave PIX não encontrada: {}", e.getMessage(), e);
+            throw e;
         } catch (Exception e) {
             log.error("Erro inesperado ao alterar conta pix: {}", e.getMessage(), e);
             throw new BusinessValidationException("Erro inesperado ao alterar conta pix: " + e.getMessage());
         }
     }
 
-    private void validarRegrasNegocio(ChavePix chavePix) throws BusinessValidationException {
-        log.info("Validando regras de negócio");
-        for (ChavePixRegraValidatorStrategy validator : regraValidators) {
-            validator.validate(chavePix);
-        }
+    private void atualizarDadosChavePix(ChavePix chavePix, ChavePix chaveExistente) {
+        chavePix.setId(chaveExistente.getId());
+        chavePix.setTipoChave(chaveExistente.getTipoChave());
+        chavePix.setValorChave(chaveExistente.getValorChave());
+        chavePix.setDataInclusao(chaveExistente.getDataInclusao());
+        chavePix.setDataInativacao(chaveExistente.getDataInativacao());
+        log.info("Dados da conta PIX atualizados com sucesso");
     }
 }

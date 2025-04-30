@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlterarChavePixRequest {
+public class AlteracaoContaPixRequest {
 
     @NotNull(message = "O ID da chave é obrigatório")
     private UUID id;
@@ -31,7 +31,7 @@ public class AlterarChavePixRequest {
     @Pattern(regexp = "^\\d{1,8}$", message = "Conta deve ter até 8 dígitos numéricos")
     private String numeroConta;
 
-    @NotNull(message = "O nome do correntista é obrigatório")
+    @NotBlank(message = "O nome do correntista é obrigatório")
     @Size(max = 30, message = "Nome deve ter até 30 caracteres")
     private String nomeCorrentista;
 
