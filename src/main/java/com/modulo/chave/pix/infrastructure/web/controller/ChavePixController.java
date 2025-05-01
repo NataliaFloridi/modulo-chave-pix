@@ -1,11 +1,10 @@
 package com.modulo.chave.pix.infrastructure.web.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,8 +28,6 @@ import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
-import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -123,8 +120,8 @@ public class ChavePixController {
             @RequestParam(required = false) String numeroAgencia,
             @RequestParam(required = false) String numeroConta,
             @RequestParam(required = false) String nomeCorrentista,
-            @RequestParam(required = false) String dataInclusao,
-            @RequestParam(required = false) String dataInativacao) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd[ HH:mm:ss]")  LocalDateTime dataInclusao,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd[ HH:mm:ss]") LocalDateTime dataInativacao) {
         
         log.info("Recebendo requisição de consulta de chaves PIX");
         
@@ -135,8 +132,8 @@ public class ChavePixController {
                 .numeroAgencia(numeroAgencia)
                 .numeroConta(numeroConta)
                 .nomeCorrentista(nomeCorrentista)
-                .dataInclusao(dataInclusao != null ? java.time.LocalDateTime.parse(dataInclusao) : null)
-                .dataInativacao(dataInativacao != null ? java.time.LocalDateTime.parse(dataInativacao) : null)
+                .dataInclusao(dataInclusao != null ? dataInclusao : null)
+                .dataInativacao(dataInativacao != null ? dataInativacao : null)
                 .build();
 
         log.info("Iniciando processo consulta de chave PIX");

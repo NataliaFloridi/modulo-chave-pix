@@ -3,32 +3,23 @@ package com.modulo.chave.pix.application.validation.strategy.Impl;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Component;
 
 import com.modulo.chave.pix.application.validation.strategy.ConsultaChavePixStrategy;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.port.ConsultaChavePixPort;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Component
-@RequiredArgsConstructor
 @Slf4j
 public class ConsultaPorIdStrategyImpl implements ConsultaChavePixStrategy {
 
     private final ConsultaChavePixPort consultaChavePixPort;
-    private ChavePix chavePix;
+    private final ChavePix chavePix;
 
-    @Override
-    public List<ChavePix> execute() {
-        log.info("Executando consulta de chave PIX por ID: {}", chavePix.getId());
-        
-        Optional<ChavePix> chavePixEncontrada = consultaChavePixPort.findById(chavePix.getId());
-        
-        return chavePixEncontrada.map(Collections::singletonList)
-                .orElse(Collections.emptyList());
+    public ConsultaPorIdStrategyImpl(ConsultaChavePixPort consultaChavePixPort, ChavePix chavePix) {
+        this.consultaChavePixPort = consultaChavePixPort;
+        this.chavePix = chavePix;
     }
 
     @Override
@@ -39,13 +30,14 @@ public class ConsultaPorIdStrategyImpl implements ConsultaChavePixStrategy {
         log.info("Critério de consulta válido: {}", valido);
         return valido;
     }
- 
-    public ConsultaPorIdStrategyImpl comChavePix(ChavePix chavePix) {
-        this.chavePix = chavePix;
-        return this;
+    
+    @Override
+    public List<ChavePix> execute() {
+        log.info("Executando consulta de chave PIX por ID: {}", chavePix.getId());
+        
+        Optional<ChavePix> chavePixEncontrada = consultaChavePixPort.findById(chavePix.getId());
+        
+        return chavePixEncontrada.map(chave -> List.of(chave))
+            .orElse(Collections.emptyList());
     }
-
-    //ConsultaPorIdStrategy strategy = new ConsultaPorIdStrategy(consultaChavePixPort)
-    //.comChavePix(chavePix)
-    //.comOutraConfiguracao(valor);
 } 

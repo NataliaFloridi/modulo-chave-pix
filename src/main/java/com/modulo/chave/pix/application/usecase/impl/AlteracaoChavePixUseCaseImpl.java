@@ -30,24 +30,29 @@ public class AlteracaoChavePixUseCaseImpl implements AlteracaoChavePixUseCase {
     public ChavePix execute(ChavePix chavePix) throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de alteração de chave PIX");
-            ChavePix chaveExistente = alteracaoChavePixPort.findById(chavePix.getId());
-            if (chaveExistente == null) {
-                throw new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + chavePix.getId());
-            }
-            log.info("Validando regras de negócio");
-            alteracaoChavePixValidator.validate(chavePix, chaveExistente);
-
-            var validator = validationFactory.getTipoChave(chavePix.getTipoChave());
-            if (!validator.validate(chavePix.getValorChave())) {
-                log.error("Falha na validação da chave: {}", chavePix.getValorChave());
-                throw new ValidationException("Validação da chave falhou");
-            }
+            ChavePix chaveExistente = alteracaoChavePixPort.findById(chavePix.getId()).orElseThrow(
+                    () -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + chavePix.getId()));
             
             log.info("Atualizando dados da chave PIX");
-            atualizarDadosChavePix(chavePix, chaveExistente);
+            var chaveAtualizada = atualizarDadosChavePix(chavePix, chaveExistente);
+
+          
+
+            log.info("Validando regras de negócio");
+            alteracaoChavePixValidator.validate(chaveAtualizada, chaveExistente);
+
+            var validator = validationFactory.getTipoChave(chaveAtualizada.getTipoChave());
+            if (!validator.validate(chaveAtualizada.getValorChave())) {
+                log.error("Falha na validação da chave: {}", chaveAtualizada.getValorChave());
+                throw new ValidationException("Validação da chave falhou");
+            }
+
+            validarRegrasNegocio(chaveAtualizada);
+
+           
 
             log.info("Persistindo chave PIX");
-            ChavePix chaveSalva = alteracaoChavePixPort.save(chavePix);
+            ChavePix chaveSalva = alteracaoChavePixPort.save(chaveAtualizada);
 
             log.info("Chave PIX alterada com sucesso: {}", chaveSalva);
             return chaveSalva;
@@ -72,11 +77,11 @@ public class AlteracaoChavePixUseCaseImpl implements AlteracaoChavePixUseCase {
         }
     }
 
-    private void atualizarDadosChavePix(ChavePix chavePix, ChavePix chaveExistente) {
+    private ChavePix atualizarDadosChavePix(ChavePix chavePix, ChavePix chaveExistente) {
         chavePix.setId(chaveExistente.getId());
-        chavePix.setTipoChave(chaveExistente.getTipoChave());
         chavePix.setDataInclusao(chaveExistente.getDataInclusao());
         chavePix.setDataInativacao(chaveExistente.getDataInativacao());
         log.info("Dados da chave PIX atualizados com sucesso");
+        return chavePix;
     }
 }

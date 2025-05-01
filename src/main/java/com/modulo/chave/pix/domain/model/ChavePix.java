@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,5 +30,6 @@ public class ChavePix {
     private String sobrenomeCorrentista;
     private LocalDateTime dataInclusao;
     private LocalDateTime dataInativacao;
+    private TipoPessoaEnum tipoPessoa;
 }
 

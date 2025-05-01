@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,4 +60,8 @@ public class ChavePixEntity {
 
     @Column(name = "data_inativacao")
     private LocalDateTime dataInativacao;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_pessoa", nullable = false)
+    private TipoPessoaEnum tipoPessoa;
 }

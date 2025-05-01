@@ -1,14 +1,10 @@
 package com.modulo.chave.pix.application.usecase.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
 
-import com.modulo.chave.pix.application.dto.request.ConsultaChavePixRequest;
-import com.modulo.chave.pix.application.dto.response.ConsultaChavePixResponse;
 import com.modulo.chave.pix.application.usecase.ConsultaChavePixUseCase;
-import com.modulo.chave.pix.application.validation.factory.ConsultaChavePixStrategyFactory;
+import com.modulo.chave.pix.application.validation.factory.ConsultaChavePixFactory;
 import com.modulo.chave.pix.domain.model.ChavePix;
 
 import lombok.RequiredArgsConstructor;
@@ -25,19 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConsultaChavePixUseCaseImpl implements ConsultaChavePixUseCase {
 
-    private final ConsultaChavePixStrategyFactory strategyFactory;
+    private final ConsultaChavePixFactory strategyFactory;
 
     @Override
     public List<ChavePix> execute(ChavePix chavePix) {
         log.info("Executando consulta de chaves PIX");
         
-        // Cria a estratégia apropriada
-        var strategy = strategyFactory.createStrategy(chavePix);
-        
-        // Executa a estratégia
+        // Cria a estratégia apropriada e executa estratégia
+        var strategy = strategyFactory.criarEstrategia(chavePix);
         List<ChavePix> chavesPixList = strategy.execute();
   
-        
         log.info("Consulta de chaves PIX concluída. Encontradas {} chaves", chavesPixList.size());
         return chavesPixList;
     }

@@ -2,7 +2,6 @@ package com.modulo.chave.pix.infrastructure.web.exception;
 
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,7 @@ public class GlobalHandlerException {
     private static final Logger logger = LoggerFactory.getLogger(GlobalHandlerException.class);
 
     @ExceptionHandler({ValidationException.class, BusinessValidationException.class})
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(ValidationException ex) {
         logger.warn("Erro de validação: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
             .body(new ErrorResponse(ex.getMessage()));
@@ -65,14 +64,6 @@ public class GlobalHandlerException {
             .body(new ErrorResponse("Parâmetro obrigatório ausente: " + ex.getParameterName()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        String errorId = java.util.UUID.randomUUID().toString();
-        logger.error("Erro não tratado [{}]: {}", errorId, ex.getMessage(), ex);
-        return ResponseEntity.internalServerError()
-            .body(new ErrorResponse("Erro interno no servidor. ID: " + errorId));
-    }
-
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) {
         logger.warn("Erro de status HTTP: {}", ex.getMessage());
@@ -104,5 +95,19 @@ public class GlobalHandlerException {
         }
         
         return ResponseEntity.badRequest().body(new ErrorResponse(ex.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        String errorId = java.util.UUID.randomUUID().toString();
+        logger.error("Erro não tratado [{}]: {}", errorId, ex.getMessage(), ex);
+        return ResponseEntity.internalServerError()
+            .body(new ErrorResponse("Erro interno no servidor. ID: " + errorId));
+    }
+
+    public record ErrorResponse(String message, LocalDateTime timestamp) {
+        public ErrorResponse(String message) {
+            this(message, LocalDateTime.now());
+        }
     }
 }

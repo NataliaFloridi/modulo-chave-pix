@@ -69,16 +69,16 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
 
     @Override
     public TipoPessoaEnum findByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta) {
-        log.info("Buscando chave pix por tipo de pessoa e tipo de chave");
+        log.info("Buscando tipo de pessoa por número de agência e conta");
         TipoPessoaEnum tipoPessoa = jpaChavePixRepository.findTipoPessoaByNumeroAgenciaAndNumeroConta(
                 Integer.parseInt(numeroAgencia),
                 Integer.parseInt(numeroConta));
-        log.info("Chave pix encontrada: {}", tipoPessoa);
+        log.info("Tipo de pessoa encontrado: {}", tipoPessoa);
         return tipoPessoa;
     }
 
     @Override
-    public  ChavePix findById(UUID id) {
+    public Optional<ChavePix> findById(UUID id) {
         log.info("Buscando chave pix por valor");
         ChavePixEntity chavePixEntity = jpaChavePixRepository.findById(id)
                 .orElseThrow(() -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + id));
@@ -89,55 +89,81 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public List<ChavePix> findByTipoChave(TipoChaveEnum tipoChave) {
         log.info("Buscando chaves pix por tipo de chave");
-        List<ChavePixEntity> chavePixEntities = jpaChavePixRepository.findByTipoChave(tipoChave);
-        log.info("Chaves pix encontradas: {}", chavePixEntities);
-        //return chavePixMapper.toCriarDomain(chavePixEntities);
-        return null;
+        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByTipoChave(tipoChave);
+        
+        log.info("Chaves pix encontradas: {}", chavePixEntityList);
+        return chavePixMapper.toCriarDomain(chavePixEntityList);
     }
 
     @Override
-    public List<ChavePix> findByAgenciaConta(TipoContaEnum tipoConta, String numeroAgencia, String numeroConta) {
+    public List<ChavePix> findByAgenciaAndConta(TipoContaEnum tipoConta, String numeroAgencia, String numeroConta) {
         log.info("Buscando chaves pix por tipo de conta, número de agência e número de conta");
-        List<ChavePixEntity> chavePixEntities = jpaChavePixRepository.findByAgenciaConta(tipoConta, numeroAgencia, numeroConta);
-        log.info("Chaves pix encontradas: {}", chavePixEntities);
-        //return chavePixMapper.toCriarDomain(chavePixEntities);
-        return null;
+        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByTipoContaAndNumeroAgenciaAndNumeroConta(tipoConta, Integer.parseInt(numeroAgencia), Integer.parseInt(numeroConta));
+        log.info("Chaves pix encontradas: {}", chavePixEntityList);
+        return chavePixMapper.toCriarDomain(chavePixEntityList);
     }
 
     @Override
     public List<ChavePix> findByNomeCorrentista(String nomeCorrentista) {
         log.info("Buscando chaves pix por nome do correntista");
-        List<ChavePixEntity> chavePixEntities = jpaChavePixRepository.findByNomeCorrentista(nomeCorrentista);
-        log.info("Chaves pix encontradas: {}", chavePixEntities);
-        //return chavePixMapper.toCriarDomain(chavePixEntities);
-        return null;
+        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByNomeCorrentista(nomeCorrentista);
+        
+        log.info("Chaves pix encontradas: {}", chavePixEntityList);
+        return chavePixMapper.toCriarDomain(chavePixEntityList);
     }
 
     @Override
     public List<ChavePix> findByDataInclusao(LocalDateTime dataInicio, LocalDateTime dataFim) {
         log.info("Buscando chaves pix por data de inclusão");
-        List<ChavePixEntity> chavePixEntities = jpaChavePixRepository.findByDataInclusao(dataInicio, dataFim);
-        log.info("Chaves pix encontradas: {}", chavePixEntities);
-        //return chavePixMapper.toCriarDomain(chavePixEntities);
-        return null;
+        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByDataInclusao(dataInicio);
+        
+        log.info("Chaves pix encontradas: {}", chavePixEntityList);
+        return chavePixMapper.toCriarDomain(chavePixEntityList);
     }
 
     @Override
     public List<ChavePix> findByDataInativacao(LocalDateTime dataInicio, LocalDateTime dataFim) {
         log.info("Buscando chaves pix por data de inativação");
-        List<ChavePixEntity> chavePixEntities = jpaChavePixRepository.findByDataInclusao(dataInicio, dataFim);
-        log.info("Chaves pix encontradas: {}", chavePixEntities);
-        //return chavePixMapper.toCriarDomain(chavePixEntities);
-        return null;
+        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByDataInativacao(dataInicio);
+        
+        log.info("Chaves pix encontradas: {}", chavePixEntityList);
+        return chavePixMapper.toCriarDomain(chavePixEntityList);
     }
 
     @Override
-    public List<ChavePix> findByMultiplosCriterios(TipoChaveEnum tipoChave, String numeroAgencia, String numeroConta,
-            String nomeCorrentista, LocalDateTime dataInclusao, LocalDateTime dataInativacao) {
+    public List<ChavePix> findByMultiplosCriterios(
+            TipoChaveEnum tipoChave,
+            String numeroAgencia,
+            String numeroConta,
+            String nomeCorrentista,
+            LocalDateTime dataInclusao,
+            LocalDateTime dataInativacao) {
         log.info("Buscando chaves pix por múltiplos critérios");
-        List<ChavePixEntity> chavePixEntities = jpaChavePixRepository.findByMultiplosCriterios(tipoChave, numeroAgencia, numeroConta, nomeCorrentista, dataInclusao, dataInativacao);
-        log.info("Chaves pix encontradas: {}", chavePixEntities);
-        //return chavePixMapper.toCriarDomain(chavePixEntities);
-        return null;
+        
+        Integer agencia = null;
+        Integer conta = null;
+        
+        try {
+            if (numeroAgencia != null && !numeroAgencia.isEmpty()) {
+                agencia = Integer.parseInt(numeroAgencia);
+            }
+            if (numeroConta != null && !numeroConta.isEmpty()) {
+                conta = Integer.parseInt(numeroConta);
+            }
+        } catch (NumberFormatException e) {
+            log.warn("Erro ao converter número de agência/conta: {}", e.getMessage());
+            return List.of();
+        }
+        
+        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByMultiplosCriterios(
+                tipoChave,
+                agencia,
+                conta,
+                nomeCorrentista,
+                dataInclusao,
+                dataInativacao);
+        
+        log.info("Chaves pix encontradas: {}", chavePixEntityList);
+        return chavePixMapper.toCriarDomain(chavePixEntityList);
     }
 }

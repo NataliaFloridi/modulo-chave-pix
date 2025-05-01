@@ -17,7 +17,6 @@ import com.modulo.chave.pix.application.dto.response.InclusaoChavePixResponse;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,6 +58,7 @@ public class ChavePixMapper {
             .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
             .dataInclusao(chavePix.getDataInclusao())
             .dataInativacao(chavePix.getDataInativacao())
+            .tipoPessoa(chavePix.getTipoPessoa())
             .build();
         } catch (NumberFormatException e) {
            log.error("Erro ao converter número de agência ou conta para inteiro: {}", e.getMessage());
@@ -97,6 +97,7 @@ public class ChavePixMapper {
             .sobrenomeCorrentista(savedChavePix.getSobrenomeCorrentista())
             .dataInclusao(savedChavePix.getDataInclusao())
             .dataInativacao(savedChavePix.getDataInativacao())
+            .tipoPessoa(savedChavePix.getTipoPessoa())
             .build();
     }
 
@@ -145,7 +146,7 @@ public class ChavePixMapper {
             .numeroAgencia(chavePix.getNumeroAgencia())
             .numeroConta(chavePix.getNumeroConta())
             .nomeCorrentista(chavePix.getNomeCorrentista())
-            .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
+            .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista() != null ? chavePix.getSobrenomeCorrentista() : "")
             .dataInclusao(chavePix.getDataInclusao())
             .dataInativacao(chavePix.getDataInativacao())
             .build();
@@ -161,6 +162,12 @@ public class ChavePixMapper {
     public List<ConsultaChavePixResponse> toAlterarResponse(List<ChavePix> chavePixList) {
         return chavePixList.stream()
             .map(this::toConsultaResponse)
+            .collect(Collectors.toList());
+    }
+
+    public List<ChavePix> toCriarDomain(List<ChavePixEntity> chavePixEntityList) {
+        return chavePixEntityList.stream()
+            .map(this::toCriarDomain)
             .collect(Collectors.toList());
     }
 }
