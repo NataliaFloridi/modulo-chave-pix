@@ -31,17 +31,17 @@ public class ChavePixMapper {
             .build();
     }
 
-    public AlteracaoChavePixResponse toAlterarResponse(ChavePix chavePix) {
+    public AlteracaoChavePixResponse toAlterarResponse(ChavePix chavePixAtualizada) {
         return AlteracaoChavePixResponse.builder()
-            .id(chavePix.getId())
-            .tipoChave(chavePix.getTipoChave())
-            .valorChave(chavePix.getValorChave())
-            .tipoConta(chavePix.getTipoConta())
-            .numeroAgencia(chavePix.getNumeroAgencia())
-            .numeroConta(chavePix.getNumeroConta())
-            .nomeCorrentista(chavePix.getNomeCorrentista())
-            .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
-            .dataInclusao(chavePix.getDataInclusao())
+            .id(chavePixAtualizada.getId())
+            .tipoChave(chavePixAtualizada.getTipoChave())
+            .valorChave(chavePixAtualizada.getValorChave())
+            .tipoConta(chavePixAtualizada.getTipoConta())
+            .numeroAgencia(chavePixAtualizada.getNumeroAgencia())
+            .numeroConta(chavePixAtualizada.getNumeroConta())
+            .nomeCorrentista(chavePixAtualizada.getNomeCorrentista())
+            .sobrenomeCorrentista(chavePixAtualizada.getSobrenomeCorrentista())
+            .dataInclusao(chavePixAtualizada.getDataInclusao())
             .build();
     }
 
@@ -91,8 +91,8 @@ public class ChavePixMapper {
             .tipoChave(savedChavePix.getTipoChave())
             .valorChave(savedChavePix.getValorChave())
             .tipoConta(savedChavePix.getTipoConta())
-            .numeroAgencia(String.valueOf(savedChavePix.getNumeroAgencia()))
-            .numeroConta(String.valueOf(savedChavePix.getNumeroConta()))
+            .numeroAgencia(savedChavePix.getNumeroAgencia().toString())
+            .numeroConta(savedChavePix.getNumeroConta().toString())
             .nomeCorrentista(savedChavePix.getNomeCorrentista())
             .sobrenomeCorrentista(savedChavePix.getSobrenomeCorrentista())
             .dataInclusao(savedChavePix.getDataInclusao())
@@ -159,13 +159,7 @@ public class ChavePixMapper {
             .collect(Collectors.toList());
     }
 
-    public List<ConsultaChavePixResponse> toAlterarResponse(List<ChavePix> chavePixList) {
-        return chavePixList.stream()
-            .map(this::toConsultaResponse)
-            .collect(Collectors.toList());
-    }
-
-    public List<ChavePix> toCriarDomain(List<ChavePixEntity> chavePixEntityList) {
+    public List<ChavePix> toCriarDomainList(List<ChavePixEntity> chavePixEntityList) {
         return chavePixEntityList.stream()
             .map(this::toCriarDomain)
             .collect(Collectors.toList());

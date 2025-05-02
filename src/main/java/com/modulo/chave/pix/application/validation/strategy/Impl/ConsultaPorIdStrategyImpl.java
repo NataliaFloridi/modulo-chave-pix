@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.modulo.chave.pix.application.validation.strategy.ConsultaChavePixStrategy;
+import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.port.ConsultaChavePixPort;
 
@@ -25,10 +26,14 @@ public class ConsultaPorIdStrategyImpl implements ConsultaChavePixStrategy {
     @Override
     public boolean estaValido() {
         log.info("Verificando se o critério de consulta é válido");
-        boolean valido = chavePix != null && chavePix.getId() != null;
+        
+        if (chavePix == null || chavePix.getId() == null) {
+            log.error("ID da chave PIX não informado");
+            throw new ValidationException("ID da chave PIX não informado");
+        }
 
-        log.info("Critério de consulta válido: {}", valido);
-        return valido;
+        log.info("Critério de consulta válido");
+        return true;
     }
     
     @Override

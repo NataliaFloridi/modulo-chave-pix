@@ -17,7 +17,7 @@ public class StringToTipoChaveEnumConverter implements Converter<String, TipoCha
             return TipoChaveEnum.valueOf(string.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Tipo de chave inválido: " + string + 
-                ". Valores válidos são: CPF, CNPJ, EMAIL, TELEFONE, ALEATORIA");
+                ". Valores válidos são: CPF, CNPJ, EMAIL, TELEFONE, ALEATORIO");
         }
     }
 } 

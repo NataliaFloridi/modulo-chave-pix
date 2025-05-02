@@ -29,6 +29,7 @@ public class ChavePixValidationFactory {
 
     public ChavePixTipoValidatorStrategy getTipoChave(TipoChaveEnum tipoChave) {
         log.info("Obtendo estratégia de validação para o tipo de chave: {}", tipoChave);
+        
         switch (tipoChave) {
             case CELULAR:
                 log.info("Retornando estratégia de validação para o tipo de chave: {}", tipoChave);

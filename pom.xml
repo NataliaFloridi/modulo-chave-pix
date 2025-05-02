@@ -95,6 +95,57 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.11</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <!-- DTOs -->
+                        <exclude>**/dto/**/*</exclude>
+                        <exclude>**/request/**/*</exclude>
+                        <exclude>**/response/**/*</exclude>
+                        
+                        <!-- Mappers -->
+                        <exclude>**/mappers/**/*</exclude>
+                        
+                        <!-- Exceptions -->
+                        <exclude>**/exception/**/*</exclude>
+                        
+                        <!-- Models -->
+                        <exclude>**/model/**/*</exclude>
+                        
+                        <!-- Database -->
+                        <exclude>**/db/**/*</exclude>
+                        <exclude>**/entity/**/*</exclude>
+                        <exclude>**/jparepository/**/*</exclude>
+                        
+                        <!-- Config -->
+                        <exclude>**/config/**/*</exclude>
+                        
+                        <!-- Converters -->
+                        <exclude>**/converter/**/*</exclude>
+                        
+                        <!-- Serializers -->
+                        <exclude>**/serializer/**/*</exclude>
+                        <exclude>**/ModuloChavePixApplication.class</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -11,5 +11,5 @@ public interface InclusaoChavePixPort {
     ChavePix findByValorChave(String valorChave);
     Optional<ChavePix> findById(UUID id);
     int countByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta);
-    TipoPessoaEnum findByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta);
+    TipoPessoaEnum findTipoPessoaByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta);
 }

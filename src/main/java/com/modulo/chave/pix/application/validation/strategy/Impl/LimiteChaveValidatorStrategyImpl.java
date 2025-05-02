@@ -38,7 +38,7 @@ public class LimiteChaveValidatorStrategyImpl implements ChavePixRegraValidatorS
     }
 
     private TipoPessoaEnum buscarTipoPessoa(String numeroAgencia, String numeroConta) {
-        return chavePixPort.findByNumeroAgenciaAndNumeroConta(numeroAgencia, numeroConta);
+        return chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(numeroAgencia, numeroConta);
     }
 
     private boolean validarLimiteChave(TipoPessoaEnum tipoPessoa, int quantidadeChaves) {

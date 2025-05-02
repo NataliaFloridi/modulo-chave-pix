@@ -14,20 +14,53 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.core.convert.ConversionFailedException;
 
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.RegistroNotFoundException;
 import com.modulo.chave.pix.domain.exception.DuplicateKeyException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ControllerAdvice
 public class GlobalHandlerException {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalHandlerException.class);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Erro de argumento inválido: {}", ex.getMessage());
+        
+        if (ex.getMessage() != null && ex.getMessage().contains("Data inválida")) {
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(ex.getMessage()));
+        }
+        
+        if (ex.getMessage() != null && ex.getMessage().contains("No enum constant")) {
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse("Valor inválido para o enum. Verifique os valores permitidos."));
+        }
+        
+        return ResponseEntity.badRequest()
+            .body(new ErrorResponse(ex.getMessage()));
+    }
 
+    @ExceptionHandler(ConversionFailedException.class)
+    public ResponseEntity<ErrorResponse> handleConversionFailedException(ConversionFailedException ex) {
+        log.warn("Erro de conversão: {}", ex.getMessage());
+        
+        if (ex.getCause() instanceof IllegalArgumentException) {
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(ex.getCause().getMessage()));
+        }
+        
+        return ResponseEntity.badRequest()
+            .body(new ErrorResponse("Erro ao converter valor: " + ex.getValue()));
+    }
+    
     @ExceptionHandler({ValidationException.class, BusinessValidationException.class})
     public ResponseEntity<ErrorResponse> handleValidationExceptions(ValidationException ex) {
-        logger.warn("Erro de validação: {}", ex.getMessage());
+        log.warn("Erro de validação: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
             .body(new ErrorResponse(ex.getMessage()));
     }
@@ -38,70 +71,58 @@ public class GlobalHandlerException {
             .map(FieldError::getDefaultMessage)
             .collect(Collectors.joining(", "));
         
-        logger.warn("Erro de validação de argumentos: {}", errorMsg);
+        log.warn("Erro de validação de argumentos: {}", errorMsg);
         return ResponseEntity.unprocessableEntity()
             .body(new ErrorResponse("Erro de validação: " + errorMsg));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
-        logger.warn("Erro ao ler requisição: {}", ex.getMessage());
+        log.warn("Erro ao ler requisição: {}", ex.getMessage());
         return ResponseEntity.badRequest()
             .body(new ErrorResponse("Formato de requisição inválido"));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
-        logger.warn("Método HTTP não suportado: {}", ex.getMessage());
+        log.warn("Método HTTP não suportado: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
             .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorResponse> handleMissingParameter(MissingServletRequestParameterException ex) {
-        logger.warn("Parâmetro obrigatório ausente: {}", ex.getMessage());
+        log.warn("Parâmetro obrigatório ausente: {}", ex.getMessage());
         return ResponseEntity.badRequest()
             .body(new ErrorResponse("Parâmetro obrigatório ausente: " + ex.getParameterName()));
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) {
-        logger.warn("Erro de status HTTP: {}", ex.getMessage());
+        log.warn("Erro de status HTTP: {}", ex.getMessage());
         return ResponseEntity.status(ex.getStatusCode())
             .body(new ErrorResponse(ex.getReason()));
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateKeyException(DuplicateKeyException ex) {
-        logger.warn("Tentativa de criar chave duplicada: {}", ex.getMessage());
+        log.warn("Tentativa de criar chave duplicada: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(RegistroNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRegistroNotFoundException(RegistroNotFoundException ex) {
-        logger.warn("Registro não encontrado: {}", ex.getMessage());
+        log.error("Registro não encontrado: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponse(ex.getMessage()));
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        logger.error("Erro de argumento ilegal: {}", ex.getMessage(), ex);
-        
-        if (ex.getMessage() != null && ex.getMessage().contains("No enum constant")) {
-            String mensagem = "Valor inválido para o enum. Verifique os valores permitidos.";
-            return ResponseEntity.badRequest().body(new ErrorResponse(mensagem, LocalDateTime.now()));
-        }
-        
-        return ResponseEntity.badRequest().body(new ErrorResponse(ex.getMessage(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         String errorId = java.util.UUID.randomUUID().toString();
-        logger.error("Erro não tratado [{}]: {}", errorId, ex.getMessage(), ex);
-        return ResponseEntity.internalServerError()
+        log.error("Erro não tratado [{}]: {}", errorId, ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponse("Erro interno no servidor. ID: " + errorId));
     }
 

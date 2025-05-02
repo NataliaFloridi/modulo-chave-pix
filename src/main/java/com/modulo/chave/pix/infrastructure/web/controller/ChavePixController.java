@@ -54,7 +54,7 @@ public class ChavePixController {
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
-    public ResponseEntity<InclusaoChavePixResponse> createChave(@Valid @RequestBody InclusaoChavePixRequest request)
+    public ResponseEntity<InclusaoChavePixResponse> incluirChave(@Valid @RequestBody InclusaoChavePixRequest request)
             throws BusinessValidationException, ValidationException {
 
         log.info("Iniciando processo de criação de chave PIX");
@@ -75,12 +75,12 @@ public class ChavePixController {
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PutMapping("/alterar-chave")
-    public ResponseEntity<AlteracaoChavePixResponse> updateChave(@Valid @RequestBody AlteracaoChavePixRequest request) {
+    public ResponseEntity<AlteracaoChavePixResponse> atualizarChave(@Valid @RequestBody AlteracaoChavePixRequest request) {
         log.info("Iniciando processo de alteração de chave PIX");
 
         var chavePix = chavePixMapper.toAlterarDomain(request);
         var chavePixAtualizada = alteracaoChavePixUseCase.execute(chavePix);
-        var chavePixResponse = chavePixMapper.toAlterarResponse(chavePixAtualizada);
+        AlteracaoChavePixResponse chavePixResponse = chavePixMapper.toAlterarResponse(chavePixAtualizada);
 
         log.info("Chave PIX atualizada com sucesso");
         return ResponseEntity.ok(chavePixResponse);
@@ -94,12 +94,12 @@ public class ChavePixController {
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PutMapping("/alterar-conta")
-    public ResponseEntity<AlteracaoChavePixResponse> updateConta(@Valid @RequestBody AlteracaoContaPixRequest request) {
+    public ResponseEntity<AlteracaoChavePixResponse> atualizarConta(@Valid @RequestBody AlteracaoContaPixRequest request) {
         log.info("Iniciando processo de alteração de conta PIX");
 
         var chavePix = chavePixMapper.toAlterarDomain(request);
         var chavePixAtualizada = alteracaoContaPixUseCase.execute(chavePix);
-        var chavePixResponse = chavePixMapper.toAlterarResponse(chavePixAtualizada);
+        AlteracaoChavePixResponse chavePixResponse = chavePixMapper.toAlterarResponse(chavePixAtualizada);
 
         log.info("Conta PIX atualizada com sucesso");
         return ResponseEntity.ok(chavePixResponse);
@@ -120,8 +120,8 @@ public class ChavePixController {
             @RequestParam(required = false) String numeroAgencia,
             @RequestParam(required = false) String numeroConta,
             @RequestParam(required = false) String nomeCorrentista,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd[ HH:mm:ss]")  LocalDateTime dataInclusao,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd[ HH:mm:ss]") LocalDateTime dataInativacao) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy[ HH:mm:ss]")  LocalDateTime dataInclusao,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy[ HH:mm:ss]") LocalDateTime dataInativacao) {
         
         log.info("Recebendo requisição de consulta de chaves PIX");
         
@@ -129,8 +129,8 @@ public class ChavePixController {
         ConsultaChavePixRequest chavePixRequest = ConsultaChavePixRequest.builder()
                 .id(id != null ? java.util.UUID.fromString(id) : null)
                 .tipoChave(tipoChave)
-                .numeroAgencia(numeroAgencia)
-                .numeroConta(numeroConta)
+                .numeroAgencia(numeroAgencia != null ? numeroAgencia.toString() : null)
+                .numeroConta(numeroConta != null ? numeroConta.toString() : null)
                 .nomeCorrentista(nomeCorrentista)
                 .dataInclusao(dataInclusao != null ? dataInclusao : null)
                 .dataInativacao(dataInativacao != null ? dataInativacao : null)
@@ -140,9 +140,14 @@ public class ChavePixController {
 
         var chavePix = chavePixMapper.toAlterarDomain(chavePixRequest);
         List<ChavePix> chavesPixEncontradas = consultaChavePixUseCase.execute(chavePix);
-        List<ConsultaChavePixResponse> chavePixResponse = chavePixMapper.toAlterarResponse(chavesPixEncontradas);
+        List<ConsultaChavePixResponse> chavePixResponse = chavePixMapper.toConsultaResponse(chavesPixEncontradas);
 
         log.info("Consulta de chaves PIX concluída. Encontradas {} chaves", chavePixResponse.size());
+        
+        if (chavePixResponse.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
         return ResponseEntity.ok(chavePixResponse);
     }
 }

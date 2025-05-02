@@ -10,7 +10,7 @@ import java.time.format.DateTimeParseException;
 @Component
 public class StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd[ HH:mm:ss]");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy[ HH:mm:ss]");
 
     @Override
     public LocalDateTime convert(String source) {
@@ -23,7 +23,7 @@ public class StringToLocalDateTimeConverter implements Converter<String, LocalDa
             return LocalDateTime.parse(trimmedSource, FORMATTER);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Data inválida: '" + source + 
-                "'. O formato deve ser 'yyyy-MM-dd HH:mm:ss' (ex: 2021-01-01 00:00:00)");
+                "'. O formato deve ser 'dd-MM-yyyy[ HH:mm:ss]' (ex: 30-01-2021 00:00:00)");
         }
     }
 } 

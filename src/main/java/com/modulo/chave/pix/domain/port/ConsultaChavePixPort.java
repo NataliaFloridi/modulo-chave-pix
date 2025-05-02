@@ -17,8 +17,8 @@ public interface ConsultaChavePixPort {
     List<ChavePix> findByTipoChave(TipoChaveEnum tipoChave);
     List<ChavePix> findByAgenciaAndConta(TipoContaEnum tipoConta, String numeroAgencia, String numeroConta);
     List<ChavePix> findByNomeCorrentista(String nomeCorrentista);
-    List<ChavePix> findByDataInclusao(LocalDateTime dataInicio, LocalDateTime dataFim);
-    List<ChavePix> findByDataInativacao(LocalDateTime dataInicio, LocalDateTime dataFim);
+    List<ChavePix> findByDataInclusao(LocalDateTime dataInclusao);
+    List<ChavePix> findByDataInativacao(LocalDateTime dataInativacao);
     List<ChavePix> findByMultiplosCriterios(
             TipoChaveEnum tipoChave,
             String numeroAgencia,

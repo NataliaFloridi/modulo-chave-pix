@@ -34,11 +34,6 @@ public class ChaveEmailValidatorStrategyImpl implements ChavePixTipoValidatorStr
             log.error("Formato inválido. Padrão esperado: [nome@dominio.com]");
             throw new ValidationException("Formato inválido. Padrão esperado: [nome@dominio.com]");
         }
-
-        if (!chaveEmail.contains("@")) {
-            log.error("E-mail deve conter o símbolo @");
-            throw new ValidationException("E-mail deve conter o símbolo @");
-        }
     }
 
     private void validarComprimento(String chaveEmail) throws ValidationException {
