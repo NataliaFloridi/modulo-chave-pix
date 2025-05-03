@@ -28,7 +28,18 @@ public class LimiteChaveValidatorStrategyImplTest {
 
     @Test
     public void deveObterSucessoAoValidarLimiteChave() {
-        ChavePix chavePix = criarChavePix();
+        ChavePix chavePix = criarChavePixFisica();
+
+        when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(1);
+
+        limiteChaveValidator.validate(chavePix);
+
+        verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+    }
+
+    @Test
+    public void deveObterSucessoAoValidarLimiteChaveJuridica() {
+        ChavePix chavePix = criarChavePixJuridica();
 
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(1);
 
@@ -39,7 +50,7 @@ public class LimiteChaveValidatorStrategyImplTest {
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaFisica() {
-        ChavePix chavePix = criarChavePix();
+        ChavePix chavePix = criarChavePixFisica();
 
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(5);
 
@@ -50,7 +61,7 @@ public class LimiteChaveValidatorStrategyImplTest {
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaJuridica() {
-        ChavePix chavePix = criarChavePix();
+        ChavePix chavePix = criarChavePixJuridica();
 
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(20);
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
@@ -60,7 +71,7 @@ public class LimiteChaveValidatorStrategyImplTest {
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaFisicaQuantidadeMaior() {
-        ChavePix chavePix = criarChavePix();
+        ChavePix chavePix = criarChavePixFisica();
 
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(20);
 
@@ -71,7 +82,7 @@ public class LimiteChaveValidatorStrategyImplTest {
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaJuridicaQuantidadeMaior() {
-        ChavePix chavePix = criarChavePix();
+        ChavePix chavePix = criarChavePixJuridica();
 
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(22);
 
@@ -81,9 +92,15 @@ public class LimiteChaveValidatorStrategyImplTest {
     }
 
     
-    private ChavePix criarChavePix() {
+    private ChavePix criarChavePixFisica() {
         return ChavePix.builder()
                 .tipoPessoa(TipoPessoaEnum.FISICA)
+                .build();
+    }
+
+    private ChavePix criarChavePixJuridica() {
+        return ChavePix.builder()
+                .tipoPessoa(TipoPessoaEnum.JURIDICA)
                 .build();
     }
 }

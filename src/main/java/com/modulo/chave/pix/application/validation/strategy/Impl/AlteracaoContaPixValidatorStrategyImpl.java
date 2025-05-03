@@ -20,27 +20,27 @@ public class AlteracaoContaPixValidatorStrategyImpl implements ChavePixAlteracao
         
         log.info("Validando status da conta PIX");
         if (chavePixAtual.getDataInativacao() != null) {
-            log.error("Não é permitido alterar contas inativadas");
-            throw new BusinessValidationException("Não é permitido alterar contas inativadas");
+            log.error("Não é permitido alterar chaves pix inativadas");
+            throw new BusinessValidationException("Não é permitido alterar chaves pix inativadas");
         }
 
-        log.info("Validando ID da conta PIX");
-        if (!chavePixAtual.getId().equals(chavePixOriginal.getId())) {
-            log.error("Não é permitido alterar o ID da conta");
-            throw new BusinessValidationException("Não é permitido alterar o ID da conta PIX");
-        }
+        //log.info("Validando ID da chave PIX");
+        //if (!chavePixAtual.getId().equals(chavePixOriginal.getId())) {
+        //    log.error("Não é permitido alterar o ID da chave PIX");
+        //    throw new BusinessValidationException("Não é permitido alterar o ID da chave PIX");
+        //}
 
-        log.info("Validando tipo da chave PIX");
-        if (!chavePixAtual.getTipoChave().equals(chavePixOriginal.getTipoChave())) {
-            log.error("Não é permitido alterar o tipo da chave");
-            throw new BusinessValidationException("Não é permitido alterar o tipo da chave");
-        }
+        //log.info("Validando tipo da chave PIX");
+        //if (!chavePixAtual.getTipoChave().equals(chavePixOriginal.getTipoChave())) {
+        //    log.error("Não é permitido alterar o tipo da chave");
+        //    throw new BusinessValidationException("Não é permitido alterar o tipo da chave");
+        //}
 
-        log.info("Validando valor da chave PIX");
-        if (!chavePixAtual.getValorChave().equals(chavePixOriginal.getValorChave())) {
-            log.error("Não é permitido alterar o valor da chave");
-            throw new BusinessValidationException("Não é permitido alterar o valor da chave");
-        }
+        //log.info("Validando valor da chave PIX");
+        //if (!chavePixAtual.getValorChave().equals(chavePixOriginal.getValorChave())) {
+        //    log.error("Não é permitido alterar o valor da chave");
+        //    throw new BusinessValidationException("Não é permitido alterar o valor da chave");
+        //}
 
         log.info("Chave PIX válida");
     }

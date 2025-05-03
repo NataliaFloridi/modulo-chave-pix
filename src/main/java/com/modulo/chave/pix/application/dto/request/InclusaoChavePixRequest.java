@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,8 +47,10 @@ public class InclusaoChavePixRequest {
 
     @NotBlank(message = "Nome do correntista é obrigatório")
     @Size(max = 30, message = "Nome deve ter até 30 caracteres")
+    @Pattern(regexp = "^[A-Za-zÀ-ÿ\\s]+$", message = "Nome deve conter apenas letras e espaços")
     private String nomeCorrentista;
 
     @Size(max = 45, message = "Sobrenome deve ter até 45 caracteres")
+    @Pattern(regexp = "^[A-Za-zÀ-ÿ\\s]*$", message = "Sobrenome deve conter apenas letras e espaços")
     private String sobrenomeCorrentista;
 }

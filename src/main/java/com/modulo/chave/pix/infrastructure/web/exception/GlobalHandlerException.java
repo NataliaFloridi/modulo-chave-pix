@@ -92,7 +92,7 @@ public class GlobalHandlerException {
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         log.warn("Erro ao ler requisição: {}", ex.getMessage());
         return ResponseEntity.badRequest()
-            .body(new ErrorResponse("Formato de requisição inválido"));
+            .body(new ErrorResponse("Formato de requisição Json inválido. " + ex.getMessage()));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

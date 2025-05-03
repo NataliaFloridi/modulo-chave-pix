@@ -99,4 +99,10 @@ public class ChaveCelularValidatorStrategyImplTest{
         assertThrows(ValidationException.class, 
             () -> chaveCelularValidator.validate("+55(11)912345678"));
     }
+
+    @Test
+    void deveLancarExcecaoParaFormatoSemMais() {
+        assertThrows(ValidationException.class, 
+            () -> chaveCelularValidator.validate("55(11)912345678"));
+    }
 }

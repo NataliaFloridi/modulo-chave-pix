@@ -1,6 +1,8 @@
 package com.modulo.chave.pix.application.usecase.impl;
 
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import com.modulo.chave.pix.application.usecase.AlteracaoContaPixUseCase;
@@ -23,14 +25,14 @@ public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
     private final AlteracaoContaPixValidatorStrategyImpl alteracaoContaPixValidator;
 
     @Override
-    public ChavePix execute(ChavePix chavePix) throws ValidationException, BusinessValidationException {
+    public ChavePix execute(ChavePix novaChavePix) throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de alteração de conta PIX");
-            var chavePixExistente = alteracaoChavePixPort.findById(chavePix.getId()).orElseThrow(
-                    () -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + chavePix.getId()));
+            var chavePixExistente = alteracaoChavePixPort.findById(novaChavePix.getId()).orElseThrow(
+                    () -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + novaChavePix.getId()));
 
             log.info("Atualizando dados da chave PIX");
-            var chaveAtualizada = atualizarDadosChavePix(chavePix, chavePixExistente);
+            var chaveAtualizada = atualizarDadosChavePix(novaChavePix, chavePixExistente);
         
             log.info("Validando regras de negócio");
             alteracaoContaPixValidator.validate(chaveAtualizada, chavePixExistente);
@@ -55,14 +57,15 @@ public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
         }
     }
 
-    private ChavePix atualizarDadosChavePix(ChavePix chavePix, ChavePix chavePixExistente) {
-        chavePix.setId(chavePixExistente.getId());
-        chavePix.setTipoChave(chavePixExistente.getTipoChave());
-        chavePix.setValorChave(chavePixExistente.getValorChave());
-        chavePix.setDataInclusao(chavePixExistente.getDataInclusao());
-        chavePix.setDataInativacao(chavePixExistente.getDataInativacao());
-        chavePix.setTipoPessoa(chavePixExistente.getTipoPessoa());
+    private ChavePix atualizarDadosChavePix(ChavePix novaChavePix, ChavePix chavePixExistente) {
+        novaChavePix.setId(chavePixExistente.getId());
+        novaChavePix.setTipoChave(chavePixExistente.getTipoChave());
+        novaChavePix.setValorChave(chavePixExistente.getValorChave());
+        novaChavePix.setDataInclusao(chavePixExistente.getDataInclusao());
+       // novaChavePix.setDataInclusao(LocalDateTime.now());
+        novaChavePix.setDataInativacao(chavePixExistente.getDataInativacao());
+        novaChavePix.setTipoPessoa(chavePixExistente.getTipoPessoa());
         log.info("Dados da conta PIX atualizados com sucesso");
-        return chavePix;
+        return novaChavePix;
     }
 }

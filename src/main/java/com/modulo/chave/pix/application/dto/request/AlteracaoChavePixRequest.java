@@ -43,9 +43,11 @@ public class AlteracaoChavePixRequest {
 
     @NotBlank(message = "O nome do correntista é obrigatório")
     @Size(max = 30, message = "Nome deve ter até 30 caracteres")
+    @Pattern(regexp = "^[A-Za-zÀ-ÿ\\s]+$", message = "Nome deve conter apenas letras e espaços")
     private String nomeCorrentista;
 
     @Size(max = 45, message = "Sobrenome deve ter até 45 caracteres")
+    @Pattern(regexp = "^[A-Za-zÀ-ÿ\\s]*$", message = "Sobrenome deve conter apenas letras e espaços")
     private String sobrenomeCorrentista;
 
     @NotNull(message = "Tipo da chave é obrigatório")

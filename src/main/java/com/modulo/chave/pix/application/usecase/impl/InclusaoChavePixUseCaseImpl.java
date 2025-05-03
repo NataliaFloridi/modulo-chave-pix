@@ -56,8 +56,8 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
             log.error("Erro de negócio ao criar chave pix: {}", e.getMessage(), e);
             throw e;
         } catch (Exception e) {
-            log.error("Erro inesperado ao criar chave pix: {}", e.getMessage(), e);
-            throw new BusinessValidationException("Erro inesperado ao criar chave pix: " + e.getMessage());
+            log.error("Erro ao criar chave pix: {}", e.getMessage(), e);
+            throw new BusinessValidationException("Erro ao criar chave pix: " + e.getMessage());
         }
     }
 
@@ -70,9 +70,13 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
 
     private ChavePix criarChavePix(ChavePix chavePix) {
         log.info("Criando entidade");
-        TipoPessoaEnum tipoPessoa = chavePix.getTipoChave() == TipoChaveEnum.CNPJ ? 
-            TipoPessoaEnum.JURIDICA : TipoPessoaEnum.FISICA;
-            
+
+        TipoPessoaEnum tipoPessoa = chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(chavePix.getNumeroAgencia(), chavePix.getNumeroConta());
+        if (tipoPessoa == null) {
+            tipoPessoa = chavePix.getTipoChave() == TipoChaveEnum.CNPJ ? 
+                TipoPessoaEnum.JURIDICA : TipoPessoaEnum.FISICA;
+        }
+
         return ChavePix.builder()
                 .id(UUID.randomUUID())
                 .tipoChave(chavePix.getTipoChave())

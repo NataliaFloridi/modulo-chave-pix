@@ -52,5 +52,6 @@ public interface JpaChavePixRepository extends JpaRepository<ChavePixEntity, UUI
             @Param("dataInclusao") LocalDateTime dataInclusao,
             @Param("dataInativacao") LocalDateTime dataInativacao);
 
-    
+    @Query("SELECT cpe.tipoPessoa FROM ChavePixEntity cpe WHERE cpe.numeroAgencia = :numeroAgencia AND cpe.numeroConta = :numeroConta")
+    TipoPessoaEnum findTipoPessoaByNumeroAgenciaAndNumeroConta(@Param("numeroAgencia") Integer numeroAgencia, @Param("numeroConta") Integer numeroConta);
 }

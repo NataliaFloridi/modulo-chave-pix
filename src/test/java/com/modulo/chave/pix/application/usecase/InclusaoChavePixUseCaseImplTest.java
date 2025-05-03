@@ -1,6 +1,7 @@
 package com.modulo.chave.pix.application.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -29,6 +30,7 @@ import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;
 
 @ExtendWith(MockitoExtension.class)
@@ -103,19 +105,99 @@ public class InclusaoChavePixUseCaseImplTest {
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
+        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
         when(chavePixPort.save(any())).thenThrow(new RuntimeException("Erro ao salvar"));
 
         BusinessValidationException e = assertThrows(BusinessValidationException.class, 
             () -> inclusaoChavePixUseCase.execute(chavePix));
         
-        assertEquals("Erro inesperado ao criar chave pix: Erro ao salvar", e.getMessage());
+        assertEquals("Erro ao criar chave pix: Erro ao salvar", e.getMessage());
         verify(chavePixPort, times(1)).save(any(ChavePix.class));
+    }
+
+    @Test
+    public void deveObterSucessoAoValidarTipoPessoa() {
+        ChavePix chavePix = criarChavePixBasica();
+        
+        ChavePix chaveSalva = criarChavePixCompleta();
+        chaveSalva.setTipoPessoa(TipoPessoaEnum.FISICA);
+
+        when(validationFactory.getTipoChave(any())).thenReturn(validator);
+        when(validator.validate(any())).thenReturn(true);
+        when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
+        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
+        when(chavePixPort.save(any())).thenReturn(chaveSalva);
+
+        ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
+        
+        assertNotNull(result);
+        assertEquals(TipoPessoaEnum.FISICA, result.getTipoPessoa());
+        verify(chavePixPort, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
+    }
+
+    @Test
+    public void deveDefinirTipoPessoaFisicaQuandoTipoChaveCPF() {
+        ChavePix chavePix = criarChavePixBasica();
+        chavePix.setTipoChave(TipoChaveEnum.CPF);
+        ChavePix chaveComTipoPessoa = criarChavePixCompleta();
+        chaveComTipoPessoa.setTipoPessoa(TipoPessoaEnum.FISICA);
+
+        when(validationFactory.getTipoChave(any())).thenReturn(validator);
+        when(validator.validate(any())).thenReturn(true);
+        when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
+        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
+        when(chavePixPort.save(any())).thenReturn(chaveComTipoPessoa);
+
+        ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
+        
+        assertEquals(TipoPessoaEnum.FISICA, result.getTipoPessoa());
+    }
+
+    @Test
+    public void deveDefinirTipoPessoaJuridicaQuandoTipoChaveCNPJ() {
+        ChavePix chavePix = criarChavePixBasica();
+        chavePix.setTipoChave(TipoChaveEnum.CNPJ);
+        ChavePix chaveComTipoPessoa = criarChavePixCompleta();
+        chaveComTipoPessoa.setTipoPessoa(TipoPessoaEnum.JURIDICA);
+
+        when(validationFactory.getTipoChave(any())).thenReturn(validator);
+        when(validator.validate(any())).thenReturn(true);
+        when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
+        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
+        when(chavePixPort.save(any())).thenReturn(chaveComTipoPessoa);
+
+        ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
+        
+        assertEquals(TipoPessoaEnum.JURIDICA, result.getTipoPessoa());
+    }
+
+    @Test
+    public void deveManterTipoPessoaQuandoEncontradoNoBanco() {
+        ChavePix chavePix = criarChavePixBasica();
+        TipoPessoaEnum tipoPessoaEsperado = TipoPessoaEnum.JURIDICA;
+        ChavePix chaveComTipoPessoa = criarChavePixCompleta();
+        chaveComTipoPessoa.setTipoPessoa(tipoPessoaEsperado);
+
+        when(validationFactory.getTipoChave(any())).thenReturn(validator);
+        when(validator.validate(any())).thenReturn(true);
+        when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
+        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(tipoPessoaEsperado);
+        when(chavePixPort.save(any())).thenReturn(chaveComTipoPessoa);
+
+        ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
+        
+        assertEquals(tipoPessoaEsperado, result.getTipoPessoa());
     }
 
     private ChavePix criarChavePixBasica() {
         return ChavePix.builder()
                 .tipoChave(TipoChaveEnum.CPF)
                 .valorChave("12345678900")
+                .tipoConta(TipoContaEnum.CORRENTE)
+                .numeroAgencia(1234)
+                .numeroConta(123456)
+                .nomeCorrentista("João")
+                .sobrenomeCorrentista("Silva")
                 .build();
     }
 

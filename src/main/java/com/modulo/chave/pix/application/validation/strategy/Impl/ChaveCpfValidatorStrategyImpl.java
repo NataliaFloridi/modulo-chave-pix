@@ -34,8 +34,8 @@ public class ChaveCpfValidatorStrategyImpl implements ChavePixTipoValidatorStrat
 
     private void validarFormato(String chaveCpf) throws ValidationException {
         if (!CPF_PATTERN.matcher(chaveCpf).matches()) {
-            log.error("Formato inválido. Deve conter somente números");
-            throw new ValidationException("Formato inválido. Deve conter somente números");
+            log.error("Formato inválido. CPF deve conter somente números");
+            throw new ValidationException("Formato inválido. CPF deve conter somente números");
         }
     }
 

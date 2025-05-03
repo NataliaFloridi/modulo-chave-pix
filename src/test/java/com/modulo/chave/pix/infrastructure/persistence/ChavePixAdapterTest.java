@@ -23,6 +23,7 @@ import com.modulo.chave.pix.domain.exception.RegistroNotFoundException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 import com.modulo.chave.pix.infrastructure.db.jparepository.JpaChavePixRepository;
 
@@ -218,10 +219,13 @@ public class ChavePixAdapterTest {
     }
 
     @Test
-    public void deveObterErroContaAoBuscarChavePixPorMultiplosCriterios() {
-        List<ChavePix> result = chavePixAdpter.findByMultiplosCriterios(null, 1234, null, null, null, null);
+    public void deveObterSucessoAoBuscarTipoPessoaPorAgenciaEConta() {
+        when(jpaChavePixRepository.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(TipoPessoaEnum.FISICA);
 
-        assertEquals(List.of(), result);
-        verify(jpaChavePixRepository, times(1)).findByMultiplosCriterios(null, 1234, null, null, null, null);
+        TipoPessoaEnum result = chavePixAdpter.findTipoPessoaByNumeroAgenciaAndNumeroConta(1234, 567890);
+
+        assertEquals(TipoPessoaEnum.FISICA, result);
+        
+        verify(jpaChavePixRepository, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
     }
 }

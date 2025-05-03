@@ -141,4 +141,11 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
         log.info("Chaves pix encontradas: {}", chavePixEntityList);
         return chavePixMapper.toCriarDomainList(chavePixEntityList);
     }
+
+    public TipoPessoaEnum findTipoPessoaByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta) {
+        log.info("Buscando tipo de pessoa por número de agência e conta");
+        TipoPessoaEnum tipoPessoa = jpaChavePixRepository.findTipoPessoaByNumeroAgenciaAndNumeroConta(numeroAgencia, numeroConta);
+        log.info("Tipo de pessoa encontrado: {}", tipoPessoa);
+        return tipoPessoa;
+    }
 }

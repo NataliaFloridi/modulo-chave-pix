@@ -42,7 +42,7 @@ public class ChavePixMapper {
             .numeroAgencia(chavePixAtualizada.getNumeroAgencia())
             .numeroConta(chavePixAtualizada.getNumeroConta())
             .nomeCorrentista(chavePixAtualizada.getNomeCorrentista())
-            .sobrenomeCorrentista(chavePixAtualizada.getSobrenomeCorrentista())
+            .sobrenomeCorrentista(chavePixAtualizada.getSobrenomeCorrentista() != null ? chavePixAtualizada.getSobrenomeCorrentista() : "")
             .dataInclusao(chavePixAtualizada.getDataInclusao())
             .build();
     }
