@@ -3,7 +3,6 @@ package com.modulo.chave.pix.application.validation.factory;
 import org.springframework.stereotype.Component;
 
 import com.modulo.chave.pix.application.validation.strategy.ConsultaChavePixStrategy;
-import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 
 import lombok.RequiredArgsConstructor;
@@ -27,23 +26,17 @@ public class ConsultaChavePixFactory {
         // erifica se a estratégia por múltiplos critérios é válida
         // caso nenhuma seja válida, usa a estratégia por múltiplos critérios
 
-        if (chavePix.getId() != null
-                && (chavePix.getTipoChave() != null
-                        || chavePix.getNumeroAgencia() != null
-                        || chavePix.getNumeroConta() != null
-                        || chavePix.getNomeCorrentista() != null
-                        || chavePix.getDataInclusao() != null
-                        || chavePix.getDataInativacao() != null)) {
-            throw new ValidationException("Para consulta por ID, não é permitido informar outros critérios de busca");
+        // Tenta usar estratégia por ID primeiro
+        if (chavePix.getId() != null) {
+            log.info("Verificando se a estratégia por ID é válida");
+            var idStrategy = consultaPorIdFactory.create(chavePix);
+            if (idStrategy.estaValido()) {
+                log.info("Estratégia por ID selecionada");
+                return idStrategy;
+            }
         }
 
-        log.info("Verificando se a estratégia por ID é válida");
-        var idStrategy = consultaPorIdFactory.create(chavePix);
-        if (idStrategy.estaValido()) {
-            log.info("Estratégia por ID selecionada");
-            return idStrategy;
-        }
-
+        // Usa estratégia por múltiplos critérios como fallback
         log.info("Verificando se a estratégia por múltiplos critérios é válida");
         var multiplosCriteriosStrategy = consultaPorMultiplosCriteriosFactory.create(chavePix);
         if (multiplosCriteriosStrategy.estaValido()) {

@@ -15,14 +15,14 @@ import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
 public interface ConsultaChavePixPort {
     Optional<ChavePix> findById(UUID id);
     List<ChavePix> findByTipoChave(TipoChaveEnum tipoChave);
-    List<ChavePix> findByAgenciaAndConta(TipoContaEnum tipoConta, String numeroAgencia, String numeroConta);
+    List<ChavePix> findByAgenciaAndConta(TipoContaEnum tipoConta, Integer numeroAgencia, Integer numeroConta);
     List<ChavePix> findByNomeCorrentista(String nomeCorrentista);
     List<ChavePix> findByDataInclusao(LocalDateTime dataInclusao);
     List<ChavePix> findByDataInativacao(LocalDateTime dataInativacao);
     List<ChavePix> findByMultiplosCriterios(
             TipoChaveEnum tipoChave,
-            String numeroAgencia,
-            String numeroConta,
+            Integer numeroAgencia,
+            Integer numeroConta,
             String nomeCorrentista,
             LocalDateTime dataInclusao,
             LocalDateTime dataInativacao);

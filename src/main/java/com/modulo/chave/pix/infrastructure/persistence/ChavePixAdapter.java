@@ -58,23 +58,13 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     }
 
     @Override
-    public int countByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta) {
+    public int countByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta) {
         log.info("Contando chaves pix por número de agência e conta");
         int count = jpaChavePixRepository.countByNumeroAgenciaAndNumeroConta(
-                Integer.parseInt(numeroAgencia),
-                Integer.parseInt(numeroConta));
+                numeroAgencia,
+                numeroConta);
         log.info("Total de chaves pix: {}", count);
         return count;
-    }
-
-    @Override
-    public TipoPessoaEnum findTipoPessoaByNumeroAgenciaAndNumeroConta(String numeroAgencia, String numeroConta) {
-        log.info("Buscando tipo de pessoa por número de agência e conta");
-        TipoPessoaEnum tipoPessoa = jpaChavePixRepository.findTipoPessoaByNumeroAgenciaAndNumeroConta(
-                Integer.parseInt(numeroAgencia),
-                Integer.parseInt(numeroConta));
-        log.info("Tipo de pessoa encontrado: {}", tipoPessoa);
-        return tipoPessoa;
     }
 
     @Override
@@ -96,9 +86,9 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     }
 
     @Override
-    public List<ChavePix> findByAgenciaAndConta(TipoContaEnum tipoConta, String numeroAgencia, String numeroConta) {
+    public List<ChavePix> findByAgenciaAndConta(TipoContaEnum tipoConta, Integer numeroAgencia, Integer numeroConta) {
         log.info("Buscando chaves pix por tipo de conta, número de agência e número de conta");
-        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByTipoContaAndNumeroAgenciaAndNumeroConta(tipoConta, Integer.parseInt(numeroAgencia), Integer.parseInt(numeroConta));
+        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByTipoContaAndNumeroAgenciaAndNumeroConta(tipoConta, numeroAgencia, numeroConta);
         log.info("Chaves pix encontradas: {}", chavePixEntityList);
         return chavePixMapper.toCriarDomainList(chavePixEntityList);
     }
@@ -133,32 +123,17 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public List<ChavePix> findByMultiplosCriterios(
             TipoChaveEnum tipoChave,
-            String numeroAgencia,
-            String numeroConta,
+            Integer numeroAgencia,
+            Integer numeroConta,
             String nomeCorrentista,
             LocalDateTime dataInclusao,
             LocalDateTime dataInativacao) {
         log.info("Buscando chaves pix por múltiplos critérios");
         
-        Integer agencia = null;
-        Integer conta = null;
-        
-        try {
-            if (numeroAgencia != null && !numeroAgencia.isEmpty()) {
-                agencia = Integer.parseInt(numeroAgencia);
-            }
-            if (numeroConta != null && !numeroConta.isEmpty()) {
-                conta = Integer.parseInt(numeroConta);
-            }
-        } catch (NumberFormatException e) {
-            log.warn("Erro ao converter número de agência/conta: {}", e.getMessage());
-            return List.of();
-        }
-        
         List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByMultiplosCriterios(
                 tipoChave,
-                agencia,
-                conta,
+                numeroAgencia,
+                numeroConta,
                 nomeCorrentista,
                 dataInclusao,
                 dataInativacao);

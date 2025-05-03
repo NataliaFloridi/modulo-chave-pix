@@ -81,6 +81,7 @@ public class AlteracaoChavePixUseCaseImpl implements AlteracaoChavePixUseCase {
         chavePix.setId(chaveExistente.getId());
         chavePix.setDataInclusao(chaveExistente.getDataInclusao());
         chavePix.setDataInativacao(chaveExistente.getDataInativacao());
+        chavePix.setTipoPessoa(chaveExistente.getTipoPessoa());
         log.info("Dados da chave PIX atualizados com sucesso");
         return chavePix;
     }

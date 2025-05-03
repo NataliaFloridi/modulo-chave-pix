@@ -25,9 +25,6 @@ public interface JpaChavePixRepository extends JpaRepository<ChavePixEntity, UUI
     
     int countByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta);
 
-    @Query(value = "SELECT tipo_pessoa FROM chaves_pix WHERE numero_agencia = :numeroAgencia AND numero_conta = :numeroConta LIMIT 1", nativeQuery = true)
-    TipoPessoaEnum findTipoPessoaByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta);
-    
     TipoPessoaEnum findTipoPessoaById(UUID id);
 
     List<ChavePixEntity> findByTipoChave(TipoChaveEnum tipoChave);

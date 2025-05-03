@@ -24,8 +24,8 @@ public class ConsultaChavePixRequest {
     
     private UUID id;
     private TipoChaveEnum tipoChave;
-    private String numeroAgencia;
-    private String numeroConta;
+    private Integer numeroAgencia;
+    private Integer numeroConta;
     private String nomeCorrentista;
     private LocalDateTime dataInclusao;
     private LocalDateTime dataInativacao;

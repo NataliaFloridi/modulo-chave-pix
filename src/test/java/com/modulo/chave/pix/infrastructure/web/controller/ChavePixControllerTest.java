@@ -1,4 +1,4 @@
-package com.modulo.pix.infrastructure.web.controller;
+package com.modulo.chave.pix.infrastructure.web.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,7 +32,6 @@ import com.modulo.chave.pix.application.usecase.InclusaoChavePixUseCase;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
-import com.modulo.chave.pix.infrastructure.web.controller.ChavePixController;
 
 @ExtendWith(MockitoExtension.class)
 public class ChavePixControllerTest {
@@ -109,8 +108,8 @@ public class ChavePixControllerTest {
         AlteracaoContaPixRequest request = AlteracaoContaPixRequest.builder()
                 .id(UUID.randomUUID())
                 .tipoConta(TipoContaEnum.CORRENTE)
-                .numeroAgencia("1234")
-                .numeroConta("123456")
+                .numeroAgencia(1234)
+                .numeroConta(123456)
                 .nomeCorrentista("João")
                 .sobrenomeCorrentista("Silva")
                 .build();
@@ -137,8 +136,8 @@ public class ChavePixControllerTest {
         ConsultaChavePixRequest request = ConsultaChavePixRequest.builder()
                 .id(UUID.randomUUID())
                 .tipoChave(TipoChaveEnum.CPF)
-                .numeroAgencia("1234")
-                .numeroConta("123456")
+                .numeroAgencia(1234)
+                .numeroConta(123456)
                 .nomeCorrentista("João")
                 .dataInclusao(LocalDateTime.now())
                 .dataInativacao(LocalDateTime.now())
@@ -147,8 +146,8 @@ public class ChavePixControllerTest {
         ConsultaChavePixResponse response = ConsultaChavePixResponse.builder()
                 .id(UUID.randomUUID())
                 .tipoChave(TipoChaveEnum.CPF)
-                .numeroAgencia("1234")
-                .numeroConta("123456")
+                .numeroAgencia(1234)
+                .numeroConta(123456)
                 .nomeCorrentista("João")
                 .dataInclusao(LocalDateTime.now())
                 .dataInativacao(LocalDateTime.now())
@@ -180,8 +179,8 @@ public class ChavePixControllerTest {
         ConsultaChavePixRequest request = ConsultaChavePixRequest.builder()
                 .id(UUID.randomUUID())
                 .tipoChave(TipoChaveEnum.CPF)
-                .numeroAgencia("1234")
-                .numeroConta("123456")
+                .numeroAgencia(1234)
+                .numeroConta(123456)
                 .nomeCorrentista("João")
                 .dataInclusao(LocalDateTime.now())
                 .dataInativacao(LocalDateTime.now())
@@ -213,8 +212,8 @@ public class ChavePixControllerTest {
                 .tipoChave(TipoChaveEnum.CPF)
                 .valorChave("12345678900")
                 .tipoConta(TipoContaEnum.CORRENTE)
-                .numeroAgencia("1234")
-                .numeroConta("123456")
+                .numeroAgencia(1234)
+                .numeroConta(123456)
                 .nomeCorrentista("João")
                 .sobrenomeCorrentista("Silva")
                 .dataInclusao(LocalDateTime.now())

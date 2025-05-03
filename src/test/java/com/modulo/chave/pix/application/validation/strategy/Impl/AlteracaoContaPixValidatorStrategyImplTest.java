@@ -1,4 +1,4 @@
-package com.modulo.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.modulo.chave.pix.application.validation.strategy.Impl.AlteracaoContaPixValidatorStrategyImpl;
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
@@ -69,8 +68,8 @@ public class AlteracaoContaPixValidatorStrategyImplTest {
                 .tipoChave(TipoChaveEnum.EMAIL)
                 .tipoConta(TipoContaEnum.CORRENTE)
                 .valorChave("teste@teste.com")
-                .numeroAgencia("1234")
-                .numeroConta("1234567890")
+                .numeroAgencia(1234)
+                .numeroConta(1234567890)
                 .nomeCorrentista("Teste")
                 .dataInativacao(LocalDateTime.now())
                 .build();
@@ -91,8 +90,8 @@ public class AlteracaoContaPixValidatorStrategyImplTest {
                 .tipoChave(TipoChaveEnum.EMAIL)
                 .tipoConta(TipoContaEnum.CORRENTE)
                 .valorChave("teste@teste.com")
-                .numeroAgencia("1234")
-                .numeroConta("1234567890")
+                .numeroAgencia(1234)
+                .numeroConta(1234567890)
                 .nomeCorrentista("Teste")
                 .dataInativacao(null)
                 .build();

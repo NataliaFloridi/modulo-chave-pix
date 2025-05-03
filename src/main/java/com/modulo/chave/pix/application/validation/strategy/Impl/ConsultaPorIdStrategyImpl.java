@@ -11,7 +11,6 @@ import com.modulo.chave.pix.domain.port.ConsultaChavePixPort;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 public class ConsultaPorIdStrategyImpl implements ConsultaChavePixStrategy {
 
@@ -26,23 +25,28 @@ public class ConsultaPorIdStrategyImpl implements ConsultaChavePixStrategy {
     @Override
     public boolean estaValido() {
         log.info("Verificando se o critério de consulta é válido");
-        
-        if (chavePix == null || chavePix.getId() == null) {
-            log.error("ID da chave PIX não informado");
-            throw new ValidationException("ID da chave PIX não informado");
+        if (chavePix.getId() != null
+                && (chavePix.getTipoChave() != null
+                        || chavePix.getNumeroAgencia() != null
+                        || chavePix.getNumeroConta() != null
+                        || chavePix.getNomeCorrentista() != null
+                        || chavePix.getDataInclusao() != null
+                        || chavePix.getDataInativacao() != null)) {
+            log.error("Para consulta por ID, não é permitido informar outros critérios de busca");
+            throw new ValidationException("Para consulta por ID, não é permitido informar outros critérios de busca");
         }
-
+        
         log.info("Critério de consulta válido");
         return true;
     }
-    
+
     @Override
     public List<ChavePix> execute() {
         log.info("Executando consulta de chave PIX por ID: {}", chavePix.getId());
-        
+
         Optional<ChavePix> chavePixEncontrada = consultaChavePixPort.findById(chavePix.getId());
-        
+
         return chavePixEncontrada.map(chave -> List.of(chave))
-            .orElse(Collections.emptyList());
+                .orElse(Collections.emptyList());
     }
-} 
+}

@@ -1,4 +1,4 @@
-package com.modulo.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.modulo.chave.pix.application.validation.strategy.Impl.ConsultaPorMultiplosCriteriosStrategyImpl;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
@@ -47,7 +46,7 @@ public class ConsultaPorMultiplosCriteriosStrategyImplTest {
 
     @Test
     void deveLancarExcecaoQuandoAgenciaOuContaSaoInformadasSeparadamente() {
-        chavePix.setNumeroAgencia("1234");
+        chavePix.setNumeroAgencia(1234);
 
         assertThrows(ValidationException.class, () -> consultaPorMultiplosCriteriosStrategyImpl.estaValido());
     }
@@ -68,8 +67,8 @@ public class ConsultaPorMultiplosCriteriosStrategyImplTest {
 
     @Test
     void deveValidarQuandoAgenciaEContaSaoInformadasJuntas() {
-        chavePix.setNumeroAgencia("1234");
-        chavePix.setNumeroConta("5678");
+        chavePix.setNumeroAgencia(1234);
+        chavePix.setNumeroConta(5678);
 
         boolean resultado = consultaPorMultiplosCriteriosStrategyImpl.estaValido();
 

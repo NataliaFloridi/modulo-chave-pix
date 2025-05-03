@@ -1,4 +1,4 @@
-package com.modulo.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,15 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.modulo.chave.pix.application.validation.strategy.Impl.AlteracaoContaPixValidatorStrategyImpl;
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 
 @ExtendWith(MockitoExtension.class)
-public class ChaveCnpjValidatorStrategyImplTest {
-    private AlteracaoContaPixValidatorStrategyImpl validator = new AlteracaoContaPixValidatorStrategyImpl();
+public class AlteracaoChavePixValidatorStrategyImplTest {
+
+    private AlteracaoChavePixValidatorStrategyImpl validator = new AlteracaoChavePixValidatorStrategyImpl();
     private ChavePix chaveOriginal;
     private final UUID uuid = UUID.randomUUID();
 
@@ -45,7 +44,7 @@ public class ChaveCnpjValidatorStrategyImplTest {
     }
 
     @Test
-    void validate_DeveLancarExcecaoQuandoContaInativada() {
+    void validate_DeveLancarExcecaoQuandoChaveInativada() {
         ChavePix chaveInativada = ChavePix.builder()
                 .id(chaveOriginal.getId())
                 .tipoChave(chaveOriginal.getTipoChave())
@@ -57,7 +56,7 @@ public class ChaveCnpjValidatorStrategyImplTest {
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
                 () -> validator.validate(chaveInativada, chaveOriginal));
 
-        assertEquals("Não é permitido alterar contas inativadas", exception.getMessage());
+        assertEquals("Não é permitido alterar chaves inativadas", exception.getMessage());
     }
 
     @Test
@@ -72,7 +71,7 @@ public class ChaveCnpjValidatorStrategyImplTest {
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
                 () -> validator.validate(chaveIdAlterado, chaveOriginal));
 
-        assertEquals("Não é permitido alterar o ID da conta PIX", exception.getMessage());
+        assertEquals("Não é permitido alterar o ID da chave", exception.getMessage());
     }
 
     @Test
@@ -91,17 +90,24 @@ public class ChaveCnpjValidatorStrategyImplTest {
     }
 
     @Test
-    void validate_DeveLancarExcecaoQuandoValorChaveAlterado() {
-        ChavePix chaveValorAlterado = ChavePix.builder()
+    void validate_DeveLancarExcecaoQuandoAlteraChaveAleatoria() {
+        ChavePix chaveAleatoriaOriginal = ChavePix.builder()
                 .id(chaveOriginal.getId())
-                .tipoChave(chaveOriginal.getTipoChave())
-                .valorChave("novo@teste.com")
+                .tipoChave(TipoChaveEnum.ALEATORIO)
+                .valorChave(chaveOriginal.getValorChave())
+                .dataInclusao(chaveOriginal.getDataInclusao())
+                .build();
+        
+        ChavePix chaveAleatoriaAtual = ChavePix.builder()
+                .id(chaveOriginal.getId())
+                .tipoChave(TipoChaveEnum.ALEATORIO)
+                .valorChave("novo-valor")
                 .dataInclusao(chaveOriginal.getDataInclusao())
                 .build();
 
         BusinessValidationException exception = assertThrows(BusinessValidationException.class,
-                () -> validator.validate(chaveValorAlterado, chaveOriginal));
+                () -> validator.validate(chaveAleatoriaAtual, chaveAleatoriaOriginal));
 
-        assertEquals("Não é permitido alterar o valor da chave", exception.getMessage());
+        assertEquals("Não é permitido alterar o valor da chave aleatória", exception.getMessage());
     }
 }

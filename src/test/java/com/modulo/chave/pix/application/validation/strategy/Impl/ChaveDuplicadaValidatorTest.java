@@ -1,4 +1,4 @@
-package com.modulo.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveDuplicadaValidatorStrategyImpl;
 import com.modulo.chave.pix.domain.exception.DuplicateKeyException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;

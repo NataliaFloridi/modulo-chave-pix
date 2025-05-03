@@ -117,8 +117,8 @@ public class ChavePixController {
     public ResponseEntity<List<ConsultaChavePixResponse>> consultarChavesPix(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) TipoChaveEnum tipoChave,
-            @RequestParam(required = false) String numeroAgencia,
-            @RequestParam(required = false) String numeroConta,
+            @RequestParam(required = false) Integer numeroAgencia,
+            @RequestParam(required = false) Integer numeroConta,
             @RequestParam(required = false) String nomeCorrentista,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy[ HH:mm:ss]")  LocalDateTime dataInclusao,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy[ HH:mm:ss]") LocalDateTime dataInativacao) {
@@ -129,9 +129,9 @@ public class ChavePixController {
         ConsultaChavePixRequest chavePixRequest = ConsultaChavePixRequest.builder()
                 .id(id != null ? java.util.UUID.fromString(id) : null)
                 .tipoChave(tipoChave)
-                .numeroAgencia(numeroAgencia != null ? numeroAgencia.toString() : null)
-                .numeroConta(numeroConta != null ? numeroConta.toString() : null)
-                .nomeCorrentista(nomeCorrentista)
+                .numeroAgencia(numeroAgencia != null ? numeroAgencia : null)
+                .numeroConta(numeroConta != null ? numeroConta : null)
+                .nomeCorrentista(nomeCorrentista != null ? nomeCorrentista : null)
                 .dataInclusao(dataInclusao != null ? dataInclusao : null)
                 .dataInativacao(dataInativacao != null ? dataInativacao : null)
                 .build();

@@ -1,4 +1,4 @@
-package com.modulo.pix.application.usecase;
+package com.modulo.chave.pix.application.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -65,8 +65,8 @@ public class ConsultaChavePixUseCaseImplTest {
                 .tipoChave(TipoChaveEnum.CPF)
                 .valorChave("12345678900")
                 .tipoConta(TipoContaEnum.CORRENTE)
-                .numeroAgencia("1234")
-                .numeroConta("123456")
+                .numeroAgencia(1234)
+                .numeroConta(123456)
                 .nomeCorrentista("João")
                 .sobrenomeCorrentista("Silva")
                 .dataInclusao(LocalDateTime.now())

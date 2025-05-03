@@ -3,9 +3,10 @@ package com.modulo.chave.pix.application.dto.request;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,13 +30,19 @@ public class InclusaoChavePixRequest {
     @NotNull(message = "Tipo da conta é obrigatório")
     private TipoContaEnum tipoConta;
 
-    @NotBlank(message = "Agência é obrigatória")
-    @Pattern(regexp = "^\\d{1,4}$", message = "Agência deve ter até 4 dígitos numéricos")
-    private String numeroAgencia;
+    @NotNull(message = "Agência é obrigatória")
+    @Min(value = 1, message = "Agência deve ter pelo menos 1 dígito numérico")
+    @Max(value = 9999, message = "Agência deve ter até 4 dígitos numéricos")
+    private Integer numeroAgencia;
+    //@Pattern(regexp = "^\\d{1,4}$", message = "Agência deve ter até 4 dígitos numéricos")
+    //private String numeroAgencia;
 
-    @NotBlank(message = "Conta é obrigatória")
-    @Pattern(regexp = "^\\d{1,8}$", message = "Conta deve ter até 8 dígitos numéricos")
-    private String numeroConta;
+    @NotNull(message = "Conta é obrigatória")
+    @Min(value = 1, message = "Conta deve ter pelo menos 1 dígito numérico")
+    @Max(value = 99999999, message = "Conta deve ter até 8 dígitos numéricos")
+    private Integer numeroConta;
+    //@Pattern(regexp = "^\\d{1,8}$", message = "Conta deve ter até 8 dígitos numéricos")
+    //private String numeroConta;
 
     @NotBlank(message = "Nome do correntista é obrigatório")
     @Size(max = 30, message = "Nome deve ter até 30 caracteres")

@@ -15,6 +15,8 @@ import com.modulo.chave.pix.application.dto.response.AlteracaoChavePixResponse;
 import com.modulo.chave.pix.application.dto.response.ConsultaChavePixResponse;
 import com.modulo.chave.pix.application.dto.response.InclusaoChavePixResponse;
 import com.modulo.chave.pix.domain.model.ChavePix;
+import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -52,8 +54,8 @@ public class ChavePixMapper {
             .tipoChave(chavePix.getTipoChave())
             .valorChave(chavePix.getValorChave())
             .tipoConta(chavePix.getTipoConta())
-            .numeroAgencia(Integer.parseInt(chavePix.getNumeroAgencia()))
-            .numeroConta(Integer.parseInt(chavePix.getNumeroConta()))
+            .numeroAgencia(chavePix.getNumeroAgencia())
+            .numeroConta(chavePix.getNumeroConta())
             .nomeCorrentista(chavePix.getNomeCorrentista())
             .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
             .dataInclusao(chavePix.getDataInclusao())
@@ -68,6 +70,9 @@ public class ChavePixMapper {
 
     public ChavePix toCriarDomain(InclusaoChavePixRequest request) {
         try {
+            TipoPessoaEnum tipoPessoa = request.getTipoChave() == TipoChaveEnum.CNPJ ? 
+                TipoPessoaEnum.JURIDICA : TipoPessoaEnum.FISICA;
+            
             return ChavePix.builder()
                 .id(UUID.randomUUID())
                 .tipoChave(request.getTipoChave())
@@ -78,6 +83,7 @@ public class ChavePixMapper {
                 .nomeCorrentista(request.getNomeCorrentista())
                 .sobrenomeCorrentista(request.getSobrenomeCorrentista())
                 .dataInclusao(LocalDateTime.now())
+                .tipoPessoa(tipoPessoa)
                 .build();
         } catch (Exception e) {
             log.error("Erro ao converter request para domínio: {}", e.getMessage());
@@ -91,8 +97,8 @@ public class ChavePixMapper {
             .tipoChave(savedChavePix.getTipoChave())
             .valorChave(savedChavePix.getValorChave())
             .tipoConta(savedChavePix.getTipoConta())
-            .numeroAgencia(savedChavePix.getNumeroAgencia().toString())
-            .numeroConta(savedChavePix.getNumeroConta().toString())
+            .numeroAgencia(savedChavePix.getNumeroAgencia())
+            .numeroConta(savedChavePix.getNumeroConta())
             .nomeCorrentista(savedChavePix.getNomeCorrentista())
             .sobrenomeCorrentista(savedChavePix.getSobrenomeCorrentista())
             .dataInclusao(savedChavePix.getDataInclusao())

@@ -1,4 +1,4 @@
-package com.modulo.pix.application.validation;
+package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.modulo.chave.pix.application.validation.strategy.Impl.LimiteChaveValidatorStrategyImpl;
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
@@ -31,12 +30,10 @@ public class LimiteChaveValidatorStrategyImplTest {
     public void deveObterSucessoAoValidarLimiteChave() {
         ChavePix chavePix = criarChavePix();
 
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(TipoPessoaEnum.FISICA);
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(1);
 
         limiteChaveValidator.validate(chavePix);
 
-        verify(chavePixPort, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
         verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
     }
 
@@ -44,12 +41,10 @@ public class LimiteChaveValidatorStrategyImplTest {
     public void deveObterErroLimiteChaveExcedidoPessoaFisica() {
         ChavePix chavePix = criarChavePix();
 
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(TipoPessoaEnum.FISICA);
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(5);
 
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
         verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
     }
 
@@ -57,32 +52,20 @@ public class LimiteChaveValidatorStrategyImplTest {
     public void deveObterErroLimiteChaveExcedidoPessoaJuridica() {
         ChavePix chavePix = criarChavePix();
 
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any()))
-                .thenReturn(TipoPessoaEnum.JURIDICA);
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(20);
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
         verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
-    }
-
-    private ChavePix criarChavePix() {
-        return ChavePix.builder()
-                .numeroAgencia("1234")
-                .numeroConta("567890")
-                .build();
     }
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaFisicaQuantidadeMaior() {
         ChavePix chavePix = criarChavePix();
 
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(TipoPessoaEnum.FISICA);
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(20);
 
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
         verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
     }
 
@@ -90,13 +73,17 @@ public class LimiteChaveValidatorStrategyImplTest {
     public void deveObterErroLimiteChaveExcedidoPessoaJuridicaQuantidadeMaior() {
         ChavePix chavePix = criarChavePix();
 
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any()))
-                .thenReturn(TipoPessoaEnum.JURIDICA);
         when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(22);
 
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
         verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+    }
+
+    
+    private ChavePix criarChavePix() {
+        return ChavePix.builder()
+                .tipoPessoa(TipoPessoaEnum.FISICA)
+                .build();
     }
 }

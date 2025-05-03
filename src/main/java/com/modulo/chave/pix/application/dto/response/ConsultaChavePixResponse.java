@@ -26,8 +26,8 @@ public class ConsultaChavePixResponse {
     private TipoChaveEnum tipoChave;
     private String valorChave;
     private TipoContaEnum tipoConta;
-    private String numeroAgencia;
-    private String numeroConta;
+    private Integer numeroAgencia;
+    private Integer numeroConta;
     private String nomeCorrentista;
     private String sobrenomeCorrentista;
     

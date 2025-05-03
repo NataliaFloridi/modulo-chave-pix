@@ -12,6 +12,8 @@ import com.modulo.chave.pix.application.validation.strategy.ChavePixRegraValidat
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
+import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
+import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;
 
 import lombok.AllArgsConstructor;
@@ -68,6 +70,9 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
 
     private ChavePix criarChavePix(ChavePix chavePix) {
         log.info("Criando entidade");
+        TipoPessoaEnum tipoPessoa = chavePix.getTipoChave() == TipoChaveEnum.CNPJ ? 
+            TipoPessoaEnum.JURIDICA : TipoPessoaEnum.FISICA;
+            
         return ChavePix.builder()
                 .id(UUID.randomUUID())
                 .tipoChave(chavePix.getTipoChave())
@@ -78,6 +83,7 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
                 .nomeCorrentista(chavePix.getNomeCorrentista())
                 .sobrenomeCorrentista(chavePix.getSobrenomeCorrentista())
                 .dataInclusao(LocalDateTime.now())
+                .tipoPessoa(tipoPessoa)
                 .build();
     }
 }

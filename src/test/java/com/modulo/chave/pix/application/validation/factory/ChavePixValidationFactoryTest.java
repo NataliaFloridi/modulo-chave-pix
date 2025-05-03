@@ -1,4 +1,4 @@
-package com.modulo.pix.application.factory;
+package com.modulo.chave.pix.application.validation.factory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.modulo.chave.pix.application.validation.factory.ChavePixValidationFactory;
 import com.modulo.chave.pix.application.validation.strategy.ChavePixTipoValidatorStrategy;
 import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveAleatoriaValidatorStrategyImpl;
 import com.modulo.chave.pix.application.validation.strategy.Impl.ChaveCelularValidatorStrategyImpl;

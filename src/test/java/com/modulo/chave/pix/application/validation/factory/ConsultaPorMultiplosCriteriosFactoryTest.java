@@ -1,4 +1,4 @@
-package com.modulo.pix.application.factory;
+package com.modulo.chave.pix.application.validation.factory;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.modulo.chave.pix.application.validation.factory.ConsultaPorMultiplosCriteriosFactory;
 import com.modulo.chave.pix.application.validation.strategy.Impl.ConsultaPorMultiplosCriteriosStrategyImpl;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.port.ConsultaChavePixPort;
@@ -26,8 +25,8 @@ public class ConsultaPorMultiplosCriteriosFactoryTest {
     @Test
     public void deveObterSucessoAoCriarEstrategia() {
         ChavePix chavePix = ChavePix.builder()
-            .numeroAgencia("0000")
-            .numeroConta("00000000000")
+            .numeroAgencia(0000)
+            .numeroConta(00000000000)
             .nomeCorrentista("João da Silva")
             .dataInclusao(LocalDateTime.now())
             .build();

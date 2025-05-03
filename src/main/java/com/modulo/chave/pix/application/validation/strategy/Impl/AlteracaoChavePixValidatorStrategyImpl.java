@@ -19,21 +19,18 @@ public class AlteracaoChavePixValidatorStrategyImpl implements ChavePixAlteracao
     public void validate(ChavePix chavePixAtual, ChavePix chavePixOriginal) throws BusinessValidationException {
         log.info("Validando regras de alteração de chave PIX");
     
-        //ok
         log.info("Validando status da chave PIX");
         if (chavePixAtual.getDataInativacao() != null) {
             log.error("Não é permitido alterar chaves inativadas");
             throw new BusinessValidationException("Não é permitido alterar chaves inativadas");
         }
 
-        //ok
         log.info("Validando ID da chave PIX");
         if (!chavePixAtual.getId().equals(chavePixOriginal.getId())) {
             log.error("Não é permitido alterar o ID da chave");
             throw new BusinessValidationException("Não é permitido alterar o ID da chave");
         }
 
-        //ok
         log.info("Validando tipo da chave PIX");
         if (!chavePixAtual.getTipoChave().equals(chavePixOriginal.getTipoChave())) {
             log.error("Não é permitido alterar o tipo da chave");

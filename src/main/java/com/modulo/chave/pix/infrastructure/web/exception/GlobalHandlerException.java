@@ -56,9 +56,23 @@ public class GlobalHandlerException {
             .body(new ErrorResponse("Erro ao converter valor: " + ex.getValue()));
     }
     
-    @ExceptionHandler({ValidationException.class, BusinessValidationException.class})
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(ValidationException ex) {
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {
         log.warn("Erro de validação: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+            .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateKeyException(DuplicateKeyException ex) {
+        log.warn("Tentativa de criar chave duplicada: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(BusinessValidationException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessValidationException(BusinessValidationException ex) {
+        log.warn("Erro de validação de negócio: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
             .body(new ErrorResponse(ex.getMessage()));
     }
@@ -100,13 +114,6 @@ public class GlobalHandlerException {
         log.warn("Erro de status HTTP: {}", ex.getMessage());
         return ResponseEntity.status(ex.getStatusCode())
             .body(new ErrorResponse(ex.getReason()));
-    }
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateKeyException(DuplicateKeyException ex) {
-        log.warn("Tentativa de criar chave duplicada: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(RegistroNotFoundException.class)

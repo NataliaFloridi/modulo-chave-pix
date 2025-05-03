@@ -1,4 +1,4 @@
-package com.modulo.pix.infrastructure.persistence;
+package com.modulo.chave.pix.infrastructure.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,10 +23,8 @@ import com.modulo.chave.pix.domain.exception.RegistroNotFoundException;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
-import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 import com.modulo.chave.pix.infrastructure.db.jparepository.JpaChavePixRepository;
-import com.modulo.chave.pix.infrastructure.persistence.ChavePixAdapter;
 
 @ExtendWith(MockitoExtension.class)
 public class ChavePixAdapterTest {
@@ -101,24 +99,13 @@ public class ChavePixAdapterTest {
     public void deveObterSucessoAoContarChavePixPorAgenciaEConta() {
         when(jpaChavePixRepository.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(1);
 
-        int result = chavePixAdpter.countByNumeroAgenciaAndNumeroConta("1234", "567890");
+        int result = chavePixAdpter.countByNumeroAgenciaAndNumeroConta(1234, 567890);
 
         assertEquals(1, result);
 
         verify(jpaChavePixRepository, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
     }
    
-    @Test
-    public void deveObterSucessoAoBuscarTipoPessoaPorAgenciaEConta() {
-        when(jpaChavePixRepository.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(TipoPessoaEnum.FISICA);
-
-        TipoPessoaEnum result = chavePixAdpter.findTipoPessoaByNumeroAgenciaAndNumeroConta("1234", "567890");
-
-        assertEquals(TipoPessoaEnum.FISICA, result);
-
-        verify(jpaChavePixRepository, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
-    }
-
     @Test
     public void deveObterSucessoAoBuscarChavePixPorId() {
         ChavePixEntity chavePixEntity = ChavePixEntity.builder().build();
@@ -159,7 +146,7 @@ public class ChavePixAdapterTest {
         when(jpaChavePixRepository.findByTipoContaAndNumeroAgenciaAndNumeroConta(any(), any(), any())).thenReturn(List.of(chavePixEntity));
         when(chavePixMapper.toCriarDomainList(List.of(chavePixEntity))).thenReturn(List.of(chavePix));
 
-        List<ChavePix> result = chavePixAdpter.findByAgenciaAndConta(TipoContaEnum.CORRENTE, "1234", "567890");
+        List<ChavePix> result = chavePixAdpter.findByAgenciaAndConta(TipoContaEnum.CORRENTE, 1234, 567890);
 
         assertEquals(List.of(chavePix), result);
 
@@ -222,7 +209,7 @@ public class ChavePixAdapterTest {
         when(jpaChavePixRepository.findByMultiplosCriterios(any(), any(), any(), any(), any(), any())).thenReturn(List.of(chavePixEntity));
         when(chavePixMapper.toCriarDomainList(List.of(chavePixEntity))).thenReturn(List.of(chavePix));
 
-        List<ChavePix> result = chavePixAdpter.findByMultiplosCriterios(TipoChaveEnum.CPF, "1234", "567890", "João da Silva", LocalDateTime.now(), LocalDateTime.now());
+        List<ChavePix> result = chavePixAdpter.findByMultiplosCriterios(TipoChaveEnum.CPF, 1234, 567890, "João da Silva", LocalDateTime.now(), LocalDateTime.now());
 
         assertEquals(List.of(chavePix), result);
 
@@ -232,7 +219,7 @@ public class ChavePixAdapterTest {
 
     @Test
     public void deveObterErroContaAoBuscarChavePixPorMultiplosCriterios() {
-        List<ChavePix> result = chavePixAdpter.findByMultiplosCriterios(null, "1234", null, null, null, null);
+        List<ChavePix> result = chavePixAdpter.findByMultiplosCriterios(null, 1234, null, null, null, null);
 
         assertEquals(List.of(), result);
         verify(jpaChavePixRepository, times(1)).findByMultiplosCriterios(null, 1234, null, null, null, null);
