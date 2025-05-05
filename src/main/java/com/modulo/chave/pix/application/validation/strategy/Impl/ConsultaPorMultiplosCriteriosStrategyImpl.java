@@ -32,14 +32,19 @@ public class ConsultaPorMultiplosCriteriosStrategyImpl implements ConsultaChaveP
         boolean temDataInclusao = chavePix.getDataInclusao() != null;
         boolean temDataInativacao = chavePix.getDataInativacao() != null;
 
+        log.info("Verificando se data de inclusão e data de inativação foram informadas juntas");
         if (temDataInclusao && temDataInativacao) {
+            log.error("Não é permitido informar data de inclusão e data de inativação juntas. Use apenas um dos critérios.");
             throw new ValidationException("Não é permitido informar data de inclusão e data de inativação juntas. Use apenas um dos critérios.");
         }
 
+        log.info("Verificando se agência e conta foram informadas juntas");
         if (temAgencia != temConta) {
+            log.error("Agência e conta devem ser informadas juntas.");
             throw new ValidationException("Agência e conta devem ser informadas juntas.");
         }
 
+        log.info("Verificando se os critérios de consulta são válidos");
         boolean valido = temTipoChave || 
                         (temAgencia && temConta) || 
                         temNomeCorrentista || 
@@ -47,6 +52,7 @@ public class ConsultaPorMultiplosCriteriosStrategyImpl implements ConsultaChaveP
                         temDataInativacao;
 
         if (!valido) {
+            log.error("É necessário informar pelo menos um critério de busca válido: tipo de chave, agência/conta, nome do correntista, data de inclusão ou data de inativação.");
             throw new ValidationException("É necessário informar pelo menos um critério de busca válido: tipo de chave, agência/conta, nome do correntista, data de inclusão ou data de inativação.");
         }
 

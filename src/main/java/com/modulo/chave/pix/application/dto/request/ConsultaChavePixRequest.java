@@ -10,12 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO para requisição de consulta de chaves PIX.
- * 
- * Padrão: Builder
- * Motivo: Para facilitar a criação de objetos com muitos parâmetros opcionais.
- */
 @Data
 @Builder
 @NoArgsConstructor

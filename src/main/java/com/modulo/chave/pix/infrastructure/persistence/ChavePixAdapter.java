@@ -34,8 +34,8 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public ChavePix salvarInclusaoChavePix(ChavePix chavePix) {
         log.info("Salvando chave pix");
-        ChavePixEntity chavePixEntity = chavePixMapper.toEntity(chavePix);
-        ChavePixEntity chavePixSalva = jpaChavePixRepository.save(chavePixEntity);
+        var chavePixEntity = chavePixMapper.toEntity(chavePix);
+        var chavePixSalva = jpaChavePixRepository.save(chavePixEntity);
 
         log.info("Chave pix salva com sucesso");
         return chavePixMapper.toDomain(chavePixSalva);
@@ -52,7 +52,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public ChavePix buscarPeloValorChave(String valorChave) {
         log.info("Buscando chave pix por valor");
-        ChavePixEntity chavePixEntity = jpaChavePixRepository.findByValorChave(valorChave)
+        var chavePixEntity = jpaChavePixRepository.findByValorChave(valorChave)
                 .orElseThrow(() -> new RegistroNotFoundException("Chave PIX não encontrada pelo valor: " + valorChave));
         log.info("Chave pix encontrada: {}", chavePixEntity);
         return chavePixMapper.toDomain(chavePixEntity);
@@ -71,7 +71,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public Optional<ChavePix> buscarPeloId(UUID id) {
         log.info("Buscando chave pix por ID");
-        ChavePixEntity chavePixEntity = jpaChavePixRepository.findById(id)
+        var chavePixEntity = jpaChavePixRepository.findById(id)
                 .orElseThrow(() -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + id));
         log.info("Chave pix encontrada: {}", chavePixEntity);
         return Optional.of(chavePixMapper.toDomain(chavePixEntity));
@@ -80,7 +80,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public List<ChavePix> buscarPeloTipoChave(TipoChaveEnum tipoChave) {
         log.info("Buscando chaves pix por tipo de chave");
-        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByTipoChave(tipoChave);
+        var chavePixEntityList = jpaChavePixRepository.findByTipoChave(tipoChave);
         
         log.info("Chaves pix encontradas: {}", chavePixEntityList);
         return chavePixMapper.toCriarDomainList(chavePixEntityList);
@@ -89,7 +89,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public List<ChavePix> buscarPorAgenciaEConta(TipoContaEnum tipoConta, Integer numeroAgencia, Integer numeroConta) {
         log.info("Buscando chaves pix por tipo de conta, número de agência e número de conta");
-        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByTipoContaAndNumeroAgenciaAndNumeroConta(tipoConta, numeroAgencia, numeroConta);
+        var chavePixEntityList = jpaChavePixRepository.findByTipoContaAndNumeroAgenciaAndNumeroConta(tipoConta, numeroAgencia, numeroConta);
         log.info("Chaves pix encontradas: {}", chavePixEntityList);
         return chavePixMapper.toCriarDomainList(chavePixEntityList);
     }
@@ -97,7 +97,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public List<ChavePix> buscarPeloNomeCorrentista(String nomeCorrentista) {
         log.info("Buscando chaves pix por nome do correntista");
-        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByNomeCorrentista(nomeCorrentista);
+        var chavePixEntityList = jpaChavePixRepository.findByNomeCorrentista(nomeCorrentista);
         
         log.info("Chaves pix encontradas: {}", chavePixEntityList);
         return chavePixMapper.toCriarDomainList(chavePixEntityList);
@@ -106,7 +106,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public List<ChavePix> buscarPelaDataInclusao(LocalDateTime dataInclusao) {
         log.info("Buscando chaves pix por data de inclusão");
-        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByDataInclusao(dataInclusao);
+        var chavePixEntityList = jpaChavePixRepository.findByDataInclusao(dataInclusao);
         
         log.info("Chaves pix encontradas: {}", chavePixEntityList);
         return chavePixMapper.toCriarDomainList(chavePixEntityList);
@@ -115,7 +115,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public List<ChavePix> buscarPelaDataInativacao(LocalDateTime dataInativacao) {
         log.info("Buscando chaves pix por data de inativação");
-        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByDataInativacao(dataInativacao);
+        var chavePixEntityList = jpaChavePixRepository.findByDataInativacao(dataInativacao);
         
         log.info("Chaves pix encontradas: {}", chavePixEntityList);
         return chavePixMapper.toCriarDomainList(chavePixEntityList);
@@ -131,7 +131,7 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
             LocalDateTime dataInativacao) {
         log.info("Buscando chaves pix por múltiplos critérios");
         
-        List<ChavePixEntity> chavePixEntityList = jpaChavePixRepository.findByMultiplosCriterios(
+        var chavePixEntityList = jpaChavePixRepository.findByMultiplosCriterios(
                 tipoChave,
                 numeroAgencia,
                 numeroConta,
@@ -153,8 +153,8 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public ChavePix salvarAlteracaoChavePix(ChavePix chavePix) {
         log.info("Salvando alteração da chave pix");
-        ChavePixEntity chavePixEntity = chavePixMapper.toEntity(chavePix);
-        ChavePixEntity chavePixSalva = jpaChavePixRepository.save(chavePixEntity);
+        var chavePixEntity = chavePixMapper.toEntity(chavePix);
+        var chavePixSalva = jpaChavePixRepository.save(chavePixEntity);
         log.info("Chave pix alterada com sucesso");
         return chavePixMapper.toDomain(chavePixSalva);
     }
@@ -162,8 +162,8 @@ public class ChavePixAdapter implements InclusaoChavePixPort, AlteracaoChavePixP
     @Override
     public ChavePix salvarInativacaoChavePix(ChavePix chavePix) {
         log.info("Salvando inativação da chave pix");
-        ChavePixEntity chavePixEntity = chavePixMapper.toEntity(chavePix);
-        ChavePixEntity chavePixSalva = jpaChavePixRepository.save(chavePixEntity);
+        var chavePixEntity = chavePixMapper.toEntity(chavePix);
+        var chavePixSalva = jpaChavePixRepository.save(chavePixEntity);
         log.info("Chave pix inativada com sucesso");
         return chavePixMapper.toDomain(chavePixSalva);
     }

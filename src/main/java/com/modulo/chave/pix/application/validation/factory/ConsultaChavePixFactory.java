@@ -36,7 +36,7 @@ public class ConsultaChavePixFactory {
             }
         }
 
-        // Usa estratégia por múltiplos critérios como fallback
+        // Usa estratégia por múltiplos critérios depois
         log.info("Verificando se a estratégia por múltiplos critérios é válida");
         var multiplosCriteriosStrategy = consultaPorMultiplosCriteriosFactory.create(chavePix);
         if (multiplosCriteriosStrategy.estaValido()) {

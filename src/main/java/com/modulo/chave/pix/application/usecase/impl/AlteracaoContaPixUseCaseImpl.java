@@ -61,8 +61,8 @@ public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
         novaChavePix.setId(chavePixExistente.getId());
         novaChavePix.setTipoChave(chavePixExistente.getTipoChave());
         novaChavePix.setValorChave(chavePixExistente.getValorChave());
-        //novaChavePix.setDataInclusao(chavePixExistente.getDataInclusao());
-        novaChavePix.setDataInclusao(LocalDateTime.now());
+        novaChavePix.setDataInclusao(chavePixExistente.getDataInclusao());
+        //novaChavePix.setDataInclusao(LocalDateTime.now());
         novaChavePix.setDataInativacao(chavePixExistente.getDataInativacao());
         novaChavePix.setTipoPessoa(chavePixExistente.getTipoPessoa());
         log.info("Dados da conta PIX atualizados com sucesso");

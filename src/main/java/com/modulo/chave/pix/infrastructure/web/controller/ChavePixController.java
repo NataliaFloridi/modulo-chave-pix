@@ -2,7 +2,6 @@ package com.modulo.chave.pix.infrastructure.web.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

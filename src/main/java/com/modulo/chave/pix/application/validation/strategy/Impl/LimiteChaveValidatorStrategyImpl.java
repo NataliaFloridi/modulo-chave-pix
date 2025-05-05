@@ -25,10 +25,12 @@ public class LimiteChaveValidatorStrategyImpl implements ChavePixRegraValidatorS
     public void validate(ChavePix chavePix) throws BusinessValidationException {
         log.info("Validando limite de chaves");
 
+        log.info("Contando chaves");
         int quantidadeChaves = chavePixPort.contarPeloNumeroAgenciaEConta(
                 chavePix.getNumeroAgencia(),
                 chavePix.getNumeroConta());
 
+        log.info("Validando limite de chaves");
         if (validarLimiteChave(chavePix.getTipoPessoa(), quantidadeChaves)) {
             log.error("Limite de chaves excedido");
             throw new BusinessValidationException("Limite de chaves excedido");

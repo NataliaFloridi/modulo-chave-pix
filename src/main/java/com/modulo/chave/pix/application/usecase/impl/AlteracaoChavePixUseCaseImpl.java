@@ -31,26 +31,24 @@ public class AlteracaoChavePixUseCaseImpl implements AlteracaoChavePixUseCase {
     public ChavePix execute(ChavePix novaChavePix) throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de alteração de chave PIX");
-            ChavePix chaveExistente = alteracaoChavePixPort.buscarPeloId(novaChavePix.getId()).orElseThrow(
+            var chaveExistente = alteracaoChavePixPort.buscarPeloId(novaChavePix.getId()).orElseThrow(
                     () -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + novaChavePix.getId()));
             
             log.info("Atualizando dados da chave PIX");
             var chaveAtualizada = atualizarDadosChavePix(novaChavePix, chaveExistente);
 
-          
-
             log.info("Validando regras de negócio");
             alteracaoChavePixValidator.validate(chaveAtualizada, chaveExistente);
 
+            log.info("Validando tipo de chave");
             var validator = validationFactory.getTipoChave(chaveAtualizada.getTipoChave());
             if (!validator.validate(chaveAtualizada.getValorChave())) {
                 log.error("Falha na validação da chave: {}", chaveAtualizada.getValorChave());
                 throw new ValidationException("Validação da chave falhou");
             }
 
+            log.info("Validando regras de negócio");
             validarRegrasNegocio(chaveAtualizada);
-
-           
 
             log.info("Persistindo chave PIX");
             ChavePix chaveSalva = alteracaoChavePixPort.salvarAlteracaoChavePix(chaveAtualizada);
@@ -80,8 +78,8 @@ public class AlteracaoChavePixUseCaseImpl implements AlteracaoChavePixUseCase {
 
     private ChavePix atualizarDadosChavePix(ChavePix novaChavePix, ChavePix chaveExistente) {
         novaChavePix.setId(chaveExistente.getId());
-        //novaChavePix.setDataInclusao(chaveExistente.getDataInclusao());
-         novaChavePix.setDataInclusao(LocalDateTime.now());
+        novaChavePix.setDataInclusao(chaveExistente.getDataInclusao());
+        //novaChavePix.setDataInclusao(LocalDateTime.now());
         novaChavePix.setDataInativacao(chaveExistente.getDataInativacao());
         novaChavePix.setTipoPessoa(chaveExistente.getTipoPessoa());
         log.info("Dados da chave PIX atualizados com sucesso");

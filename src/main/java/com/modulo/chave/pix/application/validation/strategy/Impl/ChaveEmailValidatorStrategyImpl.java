@@ -29,7 +29,6 @@ public class ChaveEmailValidatorStrategyImpl implements ChavePixTipoValidatorStr
     }
 
     private void validarFormato(String chaveEmail) throws ValidationException {
-
         if (!EMAIL_PATTERN.matcher(chaveEmail).matches()) {
             log.error("Formato inválido. Padrão esperado: [nome@dominio.com]");
             throw new ValidationException("Formato inválido. Padrão esperado: [nome@dominio.com]");

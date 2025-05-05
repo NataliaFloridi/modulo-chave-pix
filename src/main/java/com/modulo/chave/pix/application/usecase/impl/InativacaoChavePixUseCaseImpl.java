@@ -27,8 +27,10 @@ public class InativacaoChavePixUseCaseImpl implements InativacaoChavePixUseCase 
     public ChavePix execute(String id) {
         try {
             log.info("Iniciando processo de inativação de chave PIX");
+
             UUID uuid;
             try {
+                log.info("Convertendo ID para UUID");
                 uuid = UUID.fromString(id);
             } catch (IllegalArgumentException e) {
                 log.error("ID inválido: {}", id, e);
@@ -39,6 +41,7 @@ public class InativacaoChavePixUseCaseImpl implements InativacaoChavePixUseCase 
             var chavePixExistente = inativacaoChavePixPort.buscarPeloId(uuid).orElseThrow(
                 () -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + id));
 
+            log.info("Verificando se a chave PIX já está inativada");
             if (chavePixExistente.getDataInativacao() != null) {
                 log.error("Chave PIX já inativada");
                 throw new BusinessValidationException("Chave PIX já inativada");
