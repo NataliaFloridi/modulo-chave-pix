@@ -17,7 +17,6 @@ import com.modulo.chave.pix.domain.port.AlteracaoChavePixPort;
 import com.modulo.chave.pix.domain.port.ConsultaChavePixPort;
 import com.modulo.chave.pix.domain.port.InativacaoChavePixPort;
 import com.modulo.chave.pix.domain.port.InclusaoChavePixPort;
-import com.modulo.chave.pix.infrastructure.db.entity.ChavePixEntity;
 import com.modulo.chave.pix.infrastructure.db.jparepository.JpaChavePixRepository;
 
 import lombok.RequiredArgsConstructor;

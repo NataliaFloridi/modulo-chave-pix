@@ -2,7 +2,6 @@ package com.modulo.chave.pix.application.validation.strategy.Impl;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import com.modulo.chave.pix.application.validation.strategy.ConsultaChavePixStrategy;
 import com.modulo.chave.pix.domain.exception.ValidationException;

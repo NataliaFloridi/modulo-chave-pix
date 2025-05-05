@@ -94,10 +94,10 @@ O projeto utiliza uma arquitetura baseada nos princípios da Arquitetura Hexagon
 - Serviços externos configurados como recursos
 - Interfaces bem definidas via ports
 
-### V. Construa, lance, execute (futuramente)
+### V. Construa, lance, execute 
 - Separação clara entre build e execução
 - Processo de deploy definido
-- Build automatizado via Maven
+- Build automatizado e separado via Maven
 
 ### VI. Processos
 - Aplicação executada como processos stateless
@@ -152,4 +152,5 @@ mvn spring-boot:run
 ## Testes
 ```bash
 mvn test
+mvn clean verify       
 ```
