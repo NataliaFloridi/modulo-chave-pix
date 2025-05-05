@@ -2,9 +2,12 @@ package com.modulo.chave.pix.infrastructure.web.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +21,14 @@ import com.modulo.chave.pix.application.dto.request.ConsultaChavePixRequest;
 import com.modulo.chave.pix.application.dto.request.InclusaoChavePixRequest;
 import com.modulo.chave.pix.application.dto.response.AlteracaoChavePixResponse;
 import com.modulo.chave.pix.application.dto.response.ConsultaChavePixResponse;
+import com.modulo.chave.pix.application.dto.response.InativacaoChavePixResponse;
 import com.modulo.chave.pix.application.dto.response.InclusaoChavePixResponse;
 import com.modulo.chave.pix.application.mappers.ChavePixMapper;
 import com.modulo.chave.pix.application.usecase.AlteracaoChavePixUseCase;
 import com.modulo.chave.pix.application.usecase.AlteracaoContaPixUseCase;
 import com.modulo.chave.pix.application.usecase.ConsultaChavePixUseCase;
 import com.modulo.chave.pix.application.usecase.InclusaoChavePixUseCase;
+import com.modulo.chave.pix.application.usecase.InativacaoChavePixUseCase;
 import com.modulo.chave.pix.domain.exception.BusinessValidationException;
 import com.modulo.chave.pix.domain.exception.ValidationException;
 import com.modulo.chave.pix.domain.model.ChavePix;
@@ -45,13 +50,14 @@ public class ChavePixController {
     private final AlteracaoChavePixUseCase alteracaoChavePixUseCase;
     private final AlteracaoContaPixUseCase alteracaoContaPixUseCase;
     private final ConsultaChavePixUseCase consultaChavePixUseCase;
+    private final InativacaoChavePixUseCase inativacaoChavePixUseCase;
     private final ChavePixMapper chavePixMapper;
 
     @Operation(summary = "Cria nova chave PIX")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Chave criada com sucesso"),
-        @ApiResponse(responseCode = "422", description = "Erro de validação"),
-        @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Chave criada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PostMapping
     public ResponseEntity<InclusaoChavePixResponse> incluirChave(@Valid @RequestBody InclusaoChavePixRequest request)
@@ -69,13 +75,14 @@ public class ChavePixController {
 
     @Operation(summary = "Altera chave PIX existente")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Chave alterada com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Chave não encontrada"),
-        @ApiResponse(responseCode = "422", description = "Erro de validação"),
-        @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Chave alterada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Chave não encontrada"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PutMapping("/alterar-chave")
-    public ResponseEntity<AlteracaoChavePixResponse> atualizarChave(@Valid @RequestBody AlteracaoChavePixRequest request) {
+    public ResponseEntity<AlteracaoChavePixResponse> atualizarChave(
+            @Valid @RequestBody AlteracaoChavePixRequest request) {
         log.info("Iniciando processo de alteração de chave PIX");
 
         var chavePix = chavePixMapper.toAlterarDomain(request);
@@ -85,16 +92,17 @@ public class ChavePixController {
         log.info("Chave PIX atualizada com sucesso");
         return ResponseEntity.ok(chavePixResponse);
     }
-    
+
     @Operation(summary = "Altera conta PIX existente")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Chave encontrada com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Chave não encontrada"),
-        @ApiResponse(responseCode = "422", description = "Erro de validação"),
-        @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Chave encontrada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Chave não encontrada"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @PutMapping("/alterar-conta")
-    public ResponseEntity<AlteracaoChavePixResponse> atualizarConta(@Valid @RequestBody AlteracaoContaPixRequest request) {
+    public ResponseEntity<AlteracaoChavePixResponse> atualizarConta(
+            @Valid @RequestBody AlteracaoContaPixRequest request) {
         log.info("Iniciando processo de alteração de conta PIX");
 
         var chavePix = chavePixMapper.toAlterarDomain(request);
@@ -105,13 +113,12 @@ public class ChavePixController {
         return ResponseEntity.ok(chavePixResponse);
     }
 
-
     @Operation(summary = "Consulta chave PIX com filtros")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Chave encontrada com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Chave não encontrada"),
-        @ApiResponse(responseCode = "422", description = "Erro de validação"),
-        @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+            @ApiResponse(responseCode = "200", description = "Chave encontrada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Chave não encontrada"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @GetMapping
     public ResponseEntity<List<ConsultaChavePixResponse>> consultarChavesPix(
@@ -120,11 +127,11 @@ public class ChavePixController {
             @RequestParam(required = false) Integer numeroAgencia,
             @RequestParam(required = false) Integer numeroConta,
             @RequestParam(required = false) String nomeCorrentista,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy[ HH:mm:ss]")  LocalDateTime dataInclusao,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy[ HH:mm:ss]") LocalDateTime dataInclusao,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy[ HH:mm:ss]") LocalDateTime dataInativacao) {
-        
+
         log.info("Recebendo requisição de consulta de chaves PIX");
-        
+
         // Construir a requisição usando padrão builder
         ConsultaChavePixRequest chavePixRequest = ConsultaChavePixRequest.builder()
                 .id(id != null ? java.util.UUID.fromString(id) : null)
@@ -143,11 +150,29 @@ public class ChavePixController {
         List<ConsultaChavePixResponse> chavePixResponse = chavePixMapper.toConsultaResponse(chavesPixEncontradas);
 
         log.info("Consulta de chaves PIX concluída. Encontradas {} chaves", chavePixResponse.size());
-        
+
         if (chavePixResponse.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        
+
         return ResponseEntity.ok(chavePixResponse);
+    }
+
+    @Operation(summary = "Inativa chave PIX existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Chave inativada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Chave não encontrada"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+    })
+    @PutMapping("/inativar/{id}")
+    public ResponseEntity<InativacaoChavePixResponse> inativarChavePix(@PathVariable String id) {
+        log.info("Recebida requisição para inativação da chave PIX com ID: {}", id);
+
+        ChavePix chavePixInativada = inativacaoChavePixUseCase.execute(id);
+        InativacaoChavePixResponse response = chavePixMapper.toInativacaoResponse(chavePixInativada);
+
+        log.info("Chave PIX inativada com sucesso");
+        return ResponseEntity.ok(response);
     }
 }

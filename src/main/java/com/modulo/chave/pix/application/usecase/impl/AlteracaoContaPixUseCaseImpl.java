@@ -28,7 +28,7 @@ public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
     public ChavePix execute(ChavePix novaChavePix) throws ValidationException, BusinessValidationException {
         try {
             log.info("Iniciando processo de alteração de conta PIX");
-            var chavePixExistente = alteracaoChavePixPort.findById(novaChavePix.getId()).orElseThrow(
+            var chavePixExistente = alteracaoChavePixPort.buscarPeloId(novaChavePix.getId()).orElseThrow(
                     () -> new RegistroNotFoundException("Chave PIX não encontrada pelo ID: " + novaChavePix.getId()));
 
             log.info("Atualizando dados da chave PIX");
@@ -38,7 +38,7 @@ public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
             alteracaoContaPixValidator.validate(chaveAtualizada, chavePixExistente);
 
             log.info("Persistindo chave PIX");
-            var chaveSalva = alteracaoChavePixPort.save(chaveAtualizada);
+            var chaveSalva = alteracaoChavePixPort.salvarAlteracaoChavePix(chaveAtualizada);
 
             log.info("Conta PIX alterada com sucesso: {}", chaveSalva);
             return chaveSalva;
@@ -61,8 +61,8 @@ public class AlteracaoContaPixUseCaseImpl implements AlteracaoContaPixUseCase {
         novaChavePix.setId(chavePixExistente.getId());
         novaChavePix.setTipoChave(chavePixExistente.getTipoChave());
         novaChavePix.setValorChave(chavePixExistente.getValorChave());
-        novaChavePix.setDataInclusao(chavePixExistente.getDataInclusao());
-       // novaChavePix.setDataInclusao(LocalDateTime.now());
+        //novaChavePix.setDataInclusao(chavePixExistente.getDataInclusao());
+        novaChavePix.setDataInclusao(LocalDateTime.now());
         novaChavePix.setDataInativacao(chavePixExistente.getDataInativacao());
         novaChavePix.setTipoPessoa(chavePixExistente.getTipoPessoa());
         log.info("Dados da conta PIX atualizados com sucesso");

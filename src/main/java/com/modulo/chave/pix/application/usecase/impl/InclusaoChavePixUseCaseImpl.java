@@ -45,7 +45,7 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
             validarRegrasNegocio(novaChavePix);
 
             log.info("Persistindo chave PIX");
-            var chaveSalva = chavePixPort.save(novaChavePix);
+            var chaveSalva = chavePixPort.salvarInclusaoChavePix(novaChavePix);
 
             log.info("Chave PIX criada com sucesso: {}", chaveSalva);
             return chaveSalva;
@@ -71,7 +71,7 @@ public class InclusaoChavePixUseCaseImpl implements InclusaoChavePixUseCase {
     private ChavePix criarChavePix(ChavePix chavePix) {
         log.info("Criando entidade");
 
-        TipoPessoaEnum tipoPessoa = chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(chavePix.getNumeroAgencia(), chavePix.getNumeroConta());
+        TipoPessoaEnum tipoPessoa = chavePixPort.buscarTipoPessoaPeloNumeroAgenciaEConta(chavePix.getNumeroAgencia(), chavePix.getNumeroConta());
         if (tipoPessoa == null) {
             tipoPessoa = chavePix.getTipoChave() == TipoChaveEnum.CNPJ ? 
                 TipoPessoaEnum.JURIDICA : TipoPessoaEnum.FISICA;

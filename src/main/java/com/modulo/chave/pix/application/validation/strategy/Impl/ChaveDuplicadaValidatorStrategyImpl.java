@@ -21,7 +21,7 @@ public class ChaveDuplicadaValidatorStrategyImpl implements ChavePixRegraValidat
     @Override
     public void validate(ChavePix chavePix) throws BusinessValidationException {
         log.info("Validando chave pix existente");
-        if(chavePixPort.existsByValorChave(chavePix.getValorChave())){
+        if(chavePixPort.existePeloValorChave(chavePix.getValorChave())){
             log.error("Chave Pix já cadastrada " + chavePix.getValorChave());
             throw new DuplicateKeyException("Chave Pix já cadastrada " + chavePix.getValorChave());
         }

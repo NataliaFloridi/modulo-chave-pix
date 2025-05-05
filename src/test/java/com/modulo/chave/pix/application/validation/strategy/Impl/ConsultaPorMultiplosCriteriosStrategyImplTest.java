@@ -105,7 +105,7 @@ public class ConsultaPorMultiplosCriteriosStrategyImplTest {
     @Test
     void deveExecutarConsultaComSucesso() {
         List<ChavePix> chavesEsperadas = Arrays.asList(new ChavePix(), new ChavePix());
-        when(consultaChavePixPort.findByMultiplosCriterios(any(), any(), any(), any(), any(), any()))
+        when(consultaChavePixPort.buscarPorMultiplosCriterios(any(), any(), any(), any(), any(), any()))
                 .thenReturn(chavesEsperadas);
 
         List<ChavePix> resultado = consultaPorMultiplosCriteriosStrategyImpl.execute();

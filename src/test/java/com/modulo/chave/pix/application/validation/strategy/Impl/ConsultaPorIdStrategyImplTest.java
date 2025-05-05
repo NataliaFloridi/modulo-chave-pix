@@ -66,7 +66,7 @@ public class ConsultaPorIdStrategyImplTest {
         chavePix.setId(id);
         ChavePix chaveEsperada = new ChavePix();
 
-        when(consultaChavePixPort.findById(any(UUID.class))).thenReturn(Optional.of(chaveEsperada));
+        when(consultaChavePixPort.buscarPeloId(any(UUID.class))).thenReturn(Optional.of(chaveEsperada));
 
         List<ChavePix> resultado = consultaPorIdStrategyImpl.execute();
 
@@ -79,7 +79,7 @@ public class ConsultaPorIdStrategyImplTest {
         UUID id = UUID.randomUUID();
         chavePix.setId(id);
 
-        when(consultaChavePixPort.findById(any(UUID.class))).thenReturn(Optional.empty());
+        when(consultaChavePixPort.buscarPeloId(any(UUID.class))).thenReturn(Optional.empty());
 
         List<ChavePix> resultado = consultaPorIdStrategyImpl.execute();
 

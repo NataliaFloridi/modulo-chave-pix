@@ -6,10 +6,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.modulo.chave.pix.application.dto.response.InativacaoChavePixResponse;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoContaEnum;
 import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
@@ -42,8 +45,8 @@ public interface JpaChavePixRepository extends JpaRepository<ChavePixEntity, UUI
            "(:numeroAgencia IS NULL OR cpe.numeroAgencia = :numeroAgencia) AND " +
            "(:numeroConta IS NULL OR cpe.numeroConta = :numeroConta) AND " +
            "(:nomeCorrentista IS NULL OR cpe.nomeCorrentista = :nomeCorrentista) AND " +
-           "(:dataInclusao IS NULL OR cpe.dataInclusao >= :dataInclusao) AND " +
-           "(:dataInativacao IS NULL OR cpe.dataInativacao <= :dataInativacao)")
+           "(:dataInclusao IS NULL OR cpe.dataInclusao = :dataInclusao) AND " +
+           "(:dataInativacao IS NULL OR cpe.dataInativacao = :dataInativacao)")
     List<ChavePixEntity> findByMultiplosCriterios(
             @Param("tipoChave") TipoChaveEnum tipoChave,
             @Param("numeroAgencia") Integer numeroAgencia,

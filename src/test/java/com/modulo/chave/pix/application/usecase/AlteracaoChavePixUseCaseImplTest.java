@@ -60,24 +60,24 @@ public class AlteracaoChavePixUseCaseImplTest {
         ChavePix chaveExistente = criarChavePix();
         ChavePix chaveSalva = criarChavePix();
 
-        when(alteracaoChavePixPort.findById(any())).thenReturn(Optional.of(chaveExistente));
+        when(alteracaoChavePixPort.buscarPeloId(any())).thenReturn(Optional.of(chaveExistente));
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
-        when(alteracaoChavePixPort.save(any())).thenReturn(chaveSalva);
+        when(alteracaoChavePixPort.salvarAlteracaoChavePix(any())).thenReturn(chaveSalva);
 
         ChavePix resultado = alteracaoChavePixUseCase.execute(chavePix);
 
         assertEquals(chaveSalva, resultado);
-        verify(alteracaoChavePixPort, times(1)).findById(any());
-        verify(alteracaoChavePixPort, times(1)).save(any());
+        verify(alteracaoChavePixPort, times(1)).buscarPeloId(any());
+        verify(alteracaoChavePixPort, times(1)).salvarAlteracaoChavePix(any());
     }
 
     @Test
     public void deveObterErroRegistroNotFoundExceptionAoExecutarAlteracaoChavePix() {
         ChavePix chavePix = criarChavePix();
 
-        when(alteracaoChavePixPort.findById(any())).thenReturn(Optional.empty());
+        when(alteracaoChavePixPort.buscarPeloId(any())).thenReturn(Optional.empty());
 
         RegistroNotFoundException resultado = assertThrows(RegistroNotFoundException.class, () -> {
             alteracaoChavePixUseCase.execute(chavePix);
@@ -85,15 +85,15 @@ public class AlteracaoChavePixUseCaseImplTest {
 
         assertEquals("Chave PIX não encontrada pelo ID: " + chavePix.getId(), resultado.getMessage());
 
-        verify(alteracaoChavePixPort, times(1)).findById(any());
-        verify(alteracaoChavePixPort, never()).save(any());
+        verify(alteracaoChavePixPort, times(1)).buscarPeloId(any());
+        verify(alteracaoChavePixPort, never()).salvarAlteracaoChavePix(any());
     }
 
     @Test
     public void deveObterErroBusinessValidationExceptionAoExecutarAlteracaoChavePix() {
         ChavePix chavePix = criarChavePix();
 
-        when(alteracaoChavePixPort.findById(any())).thenReturn(Optional.of(chavePix));
+        when(alteracaoChavePixPort.buscarPeloId(any())).thenReturn(Optional.of(chavePix));
         doThrow(new BusinessValidationException("Não é permitido alterar contas inativadas"))
             .when(alteracaoChavePixValidator).validate(any(), any());
 
@@ -103,8 +103,8 @@ public class AlteracaoChavePixUseCaseImplTest {
 
         assertEquals("Não é permitido alterar contas inativadas", resultado.getMessage());
 
-        verify(alteracaoChavePixPort, times(1)).findById(any());
-        verify(alteracaoChavePixPort, never()).save(any());
+        verify(alteracaoChavePixPort, times(1)).buscarPeloId(any());
+        verify(alteracaoChavePixPort, never()).salvarAlteracaoChavePix(any());
     }
 
     @Test
@@ -112,11 +112,11 @@ public class AlteracaoChavePixUseCaseImplTest {
         ChavePix chavePix = criarChavePix();
         ChavePix chaveExistente = criarChavePix();
 
-        when(alteracaoChavePixPort.findById(any())).thenReturn(Optional.of(chaveExistente));
+        when(alteracaoChavePixPort.buscarPeloId(any())).thenReturn(Optional.of(chaveExistente));
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
-        when(alteracaoChavePixPort.save(any())).thenThrow(new RuntimeException("Erro ao salvar"));
+        when(alteracaoChavePixPort.salvarAlteracaoChavePix(any())).thenThrow(new RuntimeException("Erro ao salvar"));
 
         BusinessValidationException resultado = assertThrows(BusinessValidationException.class, () -> {
             alteracaoChavePixUseCase.execute(chavePix);
@@ -124,15 +124,15 @@ public class AlteracaoChavePixUseCaseImplTest {
 
         assertEquals("Erro inesperado ao alterar chave pix: Erro ao salvar", resultado.getMessage());
 
-        verify(alteracaoChavePixPort, times(1)).findById(any());
-        verify(alteracaoChavePixPort, times(1)).save(any());
+        verify(alteracaoChavePixPort, times(1)).buscarPeloId(any());
+        verify(alteracaoChavePixPort, times(1)).salvarAlteracaoChavePix(any());
     }
 
     @Test
     public void deveObterErroValidationExceptionAoExecutarAlteracaoChavePix() {
         ChavePix chavePix = criarChavePix();
 
-        when(alteracaoChavePixPort.findById(any())).thenReturn(Optional.of(chavePix));
+        when(alteracaoChavePixPort.buscarPeloId(any())).thenReturn(Optional.of(chavePix));
         doThrow(new ValidationException("Erro de validação"))
             .when(alteracaoChavePixValidator).validate(any(), any());
 
@@ -142,15 +142,15 @@ public class AlteracaoChavePixUseCaseImplTest {
 
         assertEquals("Erro de validação", resultado.getMessage());
 
-        verify(alteracaoChavePixPort, times(1)).findById(any());
-        verify(alteracaoChavePixPort, never()).save(any());
+        verify(alteracaoChavePixPort, times(1)).buscarPeloId(any());
+        verify(alteracaoChavePixPort, never()).salvarAlteracaoChavePix(any());
     }
 
     @Test
     public void deveObterErroInesperadoAoExecutarAlteracaoChavePix() {
         ChavePix chavePix = criarChavePix();
 
-        when(alteracaoChavePixPort.findById(any())).thenReturn(Optional.of(chavePix));
+        when(alteracaoChavePixPort.buscarPeloId(any())).thenReturn(Optional.of(chavePix));
         doThrow(new RuntimeException("Erro inesperado"))
             .when(alteracaoChavePixValidator).validate(any(), any());
 
@@ -160,8 +160,8 @@ public class AlteracaoChavePixUseCaseImplTest {
 
         assertEquals("Erro inesperado ao alterar chave pix: Erro inesperado", resultado.getMessage());
 
-        verify(alteracaoChavePixPort, times(1)).findById(any());
-        verify(alteracaoChavePixPort, never()).save(any());
+        verify(alteracaoChavePixPort, times(1)).buscarPeloId(any());
+        verify(alteracaoChavePixPort, never()).salvarAlteracaoChavePix(any());
     }
 
     @Test
@@ -169,7 +169,7 @@ public class AlteracaoChavePixUseCaseImplTest {
         ChavePix chavePix = criarChavePix();
         ChavePix chaveExistente = criarChavePix();
 
-        when(alteracaoChavePixPort.findById(any())).thenReturn(Optional.of(chaveExistente));
+        when(alteracaoChavePixPort.buscarPeloId(any())).thenReturn(Optional.of(chaveExistente));
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(false);
 
@@ -179,8 +179,8 @@ public class AlteracaoChavePixUseCaseImplTest {
 
         assertEquals("Validação da chave falhou", resultado.getMessage());
 
-        verify(alteracaoChavePixPort, times(1)).findById(any());
-        verify(alteracaoChavePixPort, never()).save(any());
+        verify(alteracaoChavePixPort, times(1)).buscarPeloId(any());
+        verify(alteracaoChavePixPort, never()).salvarAlteracaoChavePix(any());
     }
 
     private ChavePix criarChavePix() {

@@ -57,7 +57,7 @@ public class ConsultaPorMultiplosCriteriosStrategyImpl implements ConsultaChaveP
     @Override
     public List<ChavePix> execute() {
         log.info("Executando consulta por múltiplos critérios");
-        return consultaChavePixPort.findByMultiplosCriterios(
+        return consultaChavePixPort.buscarPorMultiplosCriterios(
                 chavePix.getTipoChave(),
                 chavePix.getNumeroAgencia(),
                 chavePix.getNumeroConta(),

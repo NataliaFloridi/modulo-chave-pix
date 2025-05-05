@@ -6,10 +6,10 @@ import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoPessoaEnum;
 
 public interface InclusaoChavePixPort {
-    ChavePix save(ChavePix chavePix);
-    boolean existsByValorChave(String valorChave);
-    ChavePix findByValorChave(String valorChave);
-    Optional<ChavePix> findById(UUID id);
-    int countByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta);
-    TipoPessoaEnum findTipoPessoaByNumeroAgenciaAndNumeroConta(Integer numeroAgencia, Integer numeroConta);
+    ChavePix salvarInclusaoChavePix(ChavePix chavePix);
+    boolean existePeloValorChave(String valorChave);
+    ChavePix buscarPeloValorChave(String valorChave);
+    Optional<ChavePix> buscarPeloId(UUID id);
+    int contarPeloNumeroAgenciaEConta(Integer numeroAgencia, Integer numeroConta);
+    TipoPessoaEnum buscarTipoPessoaPeloNumeroAgenciaEConta(Integer numeroAgencia, Integer numeroConta);
 }

@@ -31,22 +31,22 @@ public class ChaveDuplicadaValidatorTest {
     public void deveObterErroChaveDuplicada() {
         ChavePix chavePix = criarChavePix();
 
-        when(chavePixPort.existsByValorChave(any())).thenReturn(true);
+        when(chavePixPort.existePeloValorChave(any())).thenReturn(true);
 
         assertThrows(DuplicateKeyException.class, () -> chaveDuplicadaValidator.validate(chavePix));
     
-        verify(chavePixPort, times(1)).existsByValorChave(any());
+        verify(chavePixPort, times(1)).existePeloValorChave(any());
     }
 
     @Test
     public void deveObterSucessoAoValidarChaveNaoDuplicada() {
         ChavePix chavePix = criarChavePix();
 
-        when(chavePixPort.existsByValorChave(any())).thenReturn(false);
+        when(chavePixPort.existePeloValorChave(any())).thenReturn(false);
 
         chaveDuplicadaValidator.validate(chavePix);
 
-        verify(chavePixPort, times(1)).existsByValorChave(any());
+        verify(chavePixPort, times(1)).existePeloValorChave(any());
     }
 
     private ChavePix criarChavePix() {

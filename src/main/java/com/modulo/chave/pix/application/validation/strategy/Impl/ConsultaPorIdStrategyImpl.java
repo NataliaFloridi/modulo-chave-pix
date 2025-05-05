@@ -44,7 +44,7 @@ public class ConsultaPorIdStrategyImpl implements ConsultaChavePixStrategy {
     public List<ChavePix> execute() {
         log.info("Executando consulta de chave PIX por ID: {}", chavePix.getId());
 
-        Optional<ChavePix> chavePixEncontrada = consultaChavePixPort.findById(chavePix.getId());
+        Optional<ChavePix> chavePixEncontrada = consultaChavePixPort.buscarPeloId(chavePix.getId());
 
         return chavePixEncontrada.map(chave -> List.of(chave))
                 .orElse(Collections.emptyList());

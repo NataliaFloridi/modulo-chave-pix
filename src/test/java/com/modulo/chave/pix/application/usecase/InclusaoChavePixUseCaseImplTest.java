@@ -58,13 +58,13 @@ public class InclusaoChavePixUseCaseImplTest {
 
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
-        when(chavePixPort.save(any())).thenReturn(chaveSalva);
+        when(chavePixPort.salvarInclusaoChavePix(any())).thenReturn(chaveSalva);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
 
         ChavePix resultado = inclusaoChavePixUseCase.execute(chavePix);
         
         assertEquals(chaveSalva, resultado);
-        verify(chavePixPort, times(1)).save(any(ChavePix.class));
+        verify(chavePixPort, times(1)).salvarInclusaoChavePix(any(ChavePix.class));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class InclusaoChavePixUseCaseImplTest {
             () -> inclusaoChavePixUseCase.execute(chavePix));
         
         assertEquals("Validação da chave falhou", e.getMessage());
-        verify(chavePixPort, never()).save(any(ChavePix.class));
+        verify(chavePixPort, never()).salvarInclusaoChavePix(any(ChavePix.class));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class InclusaoChavePixUseCaseImplTest {
             () -> inclusaoChavePixUseCase.execute(chavePix));
         
         assertEquals("Erro de regra de negócio", e.getMessage());
-        verify(chavePixPort, never()).save(any(ChavePix.class));
+        verify(chavePixPort, never()).salvarInclusaoChavePix(any(ChavePix.class));
     }
 
     @Test
@@ -105,14 +105,14 @@ public class InclusaoChavePixUseCaseImplTest {
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
-        when(chavePixPort.save(any())).thenThrow(new RuntimeException("Erro ao salvar"));
+        when(chavePixPort.buscarTipoPessoaPeloNumeroAgenciaEConta(any(), any())).thenReturn(null);
+        when(chavePixPort.salvarInclusaoChavePix(any())).thenThrow(new RuntimeException("Erro ao salvar"));
 
         BusinessValidationException e = assertThrows(BusinessValidationException.class, 
             () -> inclusaoChavePixUseCase.execute(chavePix));
         
         assertEquals("Erro ao criar chave pix: Erro ao salvar", e.getMessage());
-        verify(chavePixPort, times(1)).save(any(ChavePix.class));
+        verify(chavePixPort, times(1)).salvarInclusaoChavePix(any(ChavePix.class));
     }
 
     @Test
@@ -125,14 +125,14 @@ public class InclusaoChavePixUseCaseImplTest {
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
-        when(chavePixPort.save(any())).thenReturn(chaveSalva);
+        when(chavePixPort.buscarTipoPessoaPeloNumeroAgenciaEConta(any(), any())).thenReturn(null);
+        when(chavePixPort.salvarInclusaoChavePix(any())).thenReturn(chaveSalva);
 
         ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
         
         assertNotNull(result);
         assertEquals(TipoPessoaEnum.FISICA, result.getTipoPessoa());
-        verify(chavePixPort, times(1)).findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any());
+        verify(chavePixPort, times(1)).buscarTipoPessoaPeloNumeroAgenciaEConta(any(), any());
     }
 
     @Test
@@ -145,8 +145,8 @@ public class InclusaoChavePixUseCaseImplTest {
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
-        when(chavePixPort.save(any())).thenReturn(chaveComTipoPessoa);
+        when(chavePixPort.buscarTipoPessoaPeloNumeroAgenciaEConta(any(), any())).thenReturn(null);
+        when(chavePixPort.salvarInclusaoChavePix(any())).thenReturn(chaveComTipoPessoa);
 
         ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
         
@@ -163,8 +163,8 @@ public class InclusaoChavePixUseCaseImplTest {
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(null);
-        when(chavePixPort.save(any())).thenReturn(chaveComTipoPessoa);
+        when(chavePixPort.buscarTipoPessoaPeloNumeroAgenciaEConta(any(), any())).thenReturn(null);
+        when(chavePixPort.salvarInclusaoChavePix(any())).thenReturn(chaveComTipoPessoa);
 
         ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
         
@@ -181,8 +181,8 @@ public class InclusaoChavePixUseCaseImplTest {
         when(validationFactory.getTipoChave(any())).thenReturn(validator);
         when(validator.validate(any())).thenReturn(true);
         when(regraValidators.iterator()).thenReturn(List.<ChavePixRegraValidatorStrategy>of().iterator());
-        when(chavePixPort.findTipoPessoaByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(tipoPessoaEsperado);
-        when(chavePixPort.save(any())).thenReturn(chaveComTipoPessoa);
+        when(chavePixPort.buscarTipoPessoaPeloNumeroAgenciaEConta(any(), any())).thenReturn(tipoPessoaEsperado);
+        when(chavePixPort.salvarInclusaoChavePix(any())).thenReturn(chaveComTipoPessoa);
 
         ChavePix result = inclusaoChavePixUseCase.execute(chavePix);
         

@@ -30,65 +30,65 @@ public class LimiteChaveValidatorStrategyImplTest {
     public void deveObterSucessoAoValidarLimiteChave() {
         ChavePix chavePix = criarChavePixFisica();
 
-        when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(1);
+        when(chavePixPort.contarPeloNumeroAgenciaEConta(any(), any())).thenReturn(1);
 
         limiteChaveValidator.validate(chavePix);
 
-        verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+        verify(chavePixPort, times(1)).contarPeloNumeroAgenciaEConta(any(), any());
     }
 
     @Test
     public void deveObterSucessoAoValidarLimiteChaveJuridica() {
         ChavePix chavePix = criarChavePixJuridica();
 
-        when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(1);
+        when(chavePixPort.contarPeloNumeroAgenciaEConta(any(), any())).thenReturn(1);
 
         limiteChaveValidator.validate(chavePix);
 
-        verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+        verify(chavePixPort, times(1)).contarPeloNumeroAgenciaEConta(any(), any());
     }
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaFisica() {
         ChavePix chavePix = criarChavePixFisica();
 
-        when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(5);
+        when(chavePixPort.contarPeloNumeroAgenciaEConta(any(), any())).thenReturn(5);
 
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+        verify(chavePixPort, times(1)).contarPeloNumeroAgenciaEConta(any(), any());
     }
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaJuridica() {
         ChavePix chavePix = criarChavePixJuridica();
 
-        when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(20);
+        when(chavePixPort.contarPeloNumeroAgenciaEConta(any(), any())).thenReturn(20);
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+        verify(chavePixPort, times(1)).contarPeloNumeroAgenciaEConta(any(), any());
     }
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaFisicaQuantidadeMaior() {
         ChavePix chavePix = criarChavePixFisica();
 
-        when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(20);
+        when(chavePixPort.contarPeloNumeroAgenciaEConta(any(), any())).thenReturn(20);
 
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+        verify(chavePixPort, times(1)).contarPeloNumeroAgenciaEConta(any(), any());
     }
 
     @Test
     public void deveObterErroLimiteChaveExcedidoPessoaJuridicaQuantidadeMaior() {
         ChavePix chavePix = criarChavePixJuridica();
 
-        when(chavePixPort.countByNumeroAgenciaAndNumeroConta(any(), any())).thenReturn(22);
+        when(chavePixPort.contarPeloNumeroAgenciaEConta(any(), any())).thenReturn(22);
 
         assertThrows(BusinessValidationException.class, () -> limiteChaveValidator.validate(chavePix));
 
-        verify(chavePixPort, times(1)).countByNumeroAgenciaAndNumeroConta(any(), any());
+        verify(chavePixPort, times(1)).contarPeloNumeroAgenciaEConta(any(), any());
     }
 
     

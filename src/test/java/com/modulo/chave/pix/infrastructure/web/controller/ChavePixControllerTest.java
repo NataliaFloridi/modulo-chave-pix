@@ -23,11 +23,13 @@ import com.modulo.chave.pix.application.dto.request.ConsultaChavePixRequest;
 import com.modulo.chave.pix.application.dto.request.InclusaoChavePixRequest;
 import com.modulo.chave.pix.application.dto.response.AlteracaoChavePixResponse;
 import com.modulo.chave.pix.application.dto.response.ConsultaChavePixResponse;
+import com.modulo.chave.pix.application.dto.response.InativacaoChavePixResponse;
 import com.modulo.chave.pix.application.dto.response.InclusaoChavePixResponse;
 import com.modulo.chave.pix.application.mappers.ChavePixMapper;
 import com.modulo.chave.pix.application.usecase.AlteracaoChavePixUseCase;
 import com.modulo.chave.pix.application.usecase.AlteracaoContaPixUseCase;
 import com.modulo.chave.pix.application.usecase.ConsultaChavePixUseCase;
+import com.modulo.chave.pix.application.usecase.InativacaoChavePixUseCase;
 import com.modulo.chave.pix.application.usecase.InclusaoChavePixUseCase;
 import com.modulo.chave.pix.domain.model.ChavePix;
 import com.modulo.chave.pix.domain.model.enums.TipoChaveEnum;
@@ -51,6 +53,9 @@ public class ChavePixControllerTest {
     @Mock
     private ConsultaChavePixUseCase consultaChavePixUseCase;
 
+    @Mock
+    private InativacaoChavePixUseCase inativacaoChavePixUseCase;
+        
     @Mock
     private ChavePixMapper chavePixMapper;
 
@@ -204,6 +209,25 @@ public class ChavePixControllerTest {
         verify(chavePixMapper, times(1)).toAlterarDomain(any(ConsultaChavePixRequest.class));
         verify(consultaChavePixUseCase, times(1)).execute(any());
         verify(chavePixMapper, times(1)).toConsultaResponse(List.of());
+    }
+
+    @Test
+    public void deveObterSucessoAoInativarChavePix() {
+        UUID id = UUID.randomUUID();
+        var chavePix = criarChavePix();
+        InativacaoChavePixResponse response = InativacaoChavePixResponse.builder()
+                .id(id)
+                .build();
+
+        when(inativacaoChavePixUseCase.execute(any())).thenReturn(chavePix);
+        when(chavePixMapper.toInativacaoResponse(chavePix)).thenReturn(response);
+
+        var responseEntity = chavePixController.inativarChavePix(id.toString());
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        verify(inativacaoChavePixUseCase, times(1)).execute(any());
+        verify(chavePixMapper, times(1)).toInativacaoResponse(chavePix);
     }
 
     private ChavePix criarChavePix() {
